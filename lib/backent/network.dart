@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:routetest/myWidgest/workElements.dart';
+import 'package:routetest/elements/workElements.dart';
 import 'network_constants.dart';
 
 class Network {
@@ -46,7 +46,20 @@ class Network {
           counter++;
         }
       }
+      // ignore: empty_catches
+
+    } on RangeError catch (_, e) {
+      print(e);
     } catch (e) {
+      SnackBar error = ilanBar(
+        "Xəta: $e",
+        "Oldu",
+        4000000,
+        () {
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        },
+      );
+      ScaffoldMessenger.of(context).showSnackBar(error);
       print(e.toString());
     }
   }

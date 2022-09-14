@@ -1,21 +1,48 @@
 import 'package:flutter/material.dart';
+import 'package:routetest/database/db.dart';
 import 'package:routetest/pages/registerPages/registerPage.dart';
 import 'package:routetest/pages/workNumberList.dart';
 import 'package:routetest/pages/aboutPage.dart';
 import 'package:routetest/pages/homePage.dart';
 import 'package:routetest/pages/workPage.dart';
-import 'myWidgest/loginElements.dart';
+import 'package:routetest/settingsPage.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'elements/loginElements.dart';
+
+String? myData = "";
+late myDataBase db;
 
 void main(List<String> args) {
-  runApp(const YaziOrneyi());
+  runApp(
+    const YaziOrneyi(),
+  );
 }
 
-class YaziOrneyi extends StatelessWidget {
+class YaziOrneyi extends StatefulWidget {
   const YaziOrneyi({super.key});
 
   @override
+  State<YaziOrneyi> createState() => _YaziOrneyiState();
+}
+
+class _YaziOrneyiState extends State<YaziOrneyi> {
+  @override
+  void initState() {
+    try {
+      db = myDataBase();
+      db.open();
+    } catch (e) {
+      print(e);
+    }
+    print("Initilazed");
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    PageController controller = PageController();
     return MaterialApp(
+      theme: ThemeData.dark(),
       initialRoute: '/',
       onGenerateRoute: (settings) {
         switch (settings.name) {
@@ -39,44 +66,92 @@ class YaziOrneyi extends StatelessWidget {
             return MaterialPageRoute(
               builder: (context) => const register(),
             );
+          case Ayarlar.routeName:
+            return MaterialPageRoute(
+              builder: (context) => const Ayarlar(),
+            );
         }
         return null;
       },
-      theme: ThemeData(fontFamily: 'esasFont'),
+      // theme: themeWrite().myTheme,
       home: Scaffold(
-        drawer: Drawer(
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(15),
-            ),
-          ),
-          semanticLabel: "Menyu",
-          backgroundColor: Colors.grey.shade400,
-          width: 220,
-          child: myList(),
-        ),
-        backgroundColor: Colors.grey.shade400,
+        drawer: const drawer(),
         appBar: AppBar(
-          backgroundColor: Colors.grey.shade500,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(5.0),
-            ),
-          ),
           centerTitle: true,
           title: const Text(
-            "NUMB V3",
+            "Numb v3",
             style: TextStyle(
-              fontFamily: 'dizaynFont',
-              fontSize: 35,
+              fontFamily: 'esasFont',
+              fontSize: 40,
             ),
           ),
         ),
-        body: const SingleChildScrollView(
-          physics: ClampingScrollPhysics(),
-          child: loginPage(),
+        body: const loginTwo(),
+      ),
+    );
+  }
+}
+
+class drawer extends StatelessWidget {
+  const drawer({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      elevation: 10,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(15),
         ),
       ),
+      semanticLabel: "Menyu",
+      width: 220,
+      child: myList(),
+    );
+  }
+}
+
+class loginTwo extends StatefulWidget {
+  const loginTwo({super.key});
+
+  @override
+  State<loginTwo> createState() => _loginTwoState();
+}
+
+class _loginTwoState extends State<loginTwo> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Expanded(
+          child: PageView(
+            controller: controller,
+            onPageChanged: (value) {
+              setState(() {});
+            },
+            children: const [
+              loginPage(),
+              register(),
+            ],
+          ),
+        ),
+        SmoothPageIndicator(
+          controller: controller,
+          count: 2,
+          axisDirection: Axis.horizontal,
+          effect: const SlideEffect(
+            spacing: 10,
+            activeDotColor: Colors.grey,
+            dotHeight: 15,
+            dotColor: Colors.blueGrey,
+            dotWidth: 15,
+          ),
+        ),
+        const SizedBox(height: 5),
+      ],
     );
   }
 }

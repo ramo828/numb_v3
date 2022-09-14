@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:routetest/myWidgest/myWidgets.dart';
+import 'package:routetest/database/db.dart';
+import 'package:routetest/database/model/user.dart';
 import 'package:routetest/pages/workPage.dart';
 
 class homePage extends StatefulWidget {
@@ -8,55 +9,114 @@ class homePage extends StatefulWidget {
   const homePage({super.key, this.mesaj});
 
   @override
-  State<homePage> createState() => _homePageState(mesaj);
+  State<homePage> createState() => _homePageState();
 }
 
-class _homePageState extends State<homePage> {
-  final String? mesaj;
-  Color iconColor = const Color(0xff536dfe);
+myDataBase db = myDataBase();
+userDB user = userDB();
+String login = "";
+String pass = "";
 
-  _homePageState(this.mesaj);
+class _homePageState extends State<homePage> {
+  Future<void> getUser() async {
+    // ignore: non_constant_identifier_names
+    List<Map<String, Object?>> user = await db.getItem(0);
+    login = user[0]['user'].toString();
+    pass = user[0]['password'].toString();
+    setState(() {});
+  }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        backgroundColor: Colors.grey.shade400,
-        appBar: AppBar(
-          backgroundColor: Colors.grey.shade600,
-          centerTitle: true,
-          title: Text(
-            "Ana Səhifə",
-            style: styleMe(15, Colors.black54),
-          ),
+  void initState() {
+    super.initState();
+    getUser();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var textStyle = const TextStyle(
+      color: Colors.orange,
+      fontSize: 30,
+    );
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: const Text(
+          "Ana Səhifə",
         ),
-        drawer: Drawer(
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(15),
+      ),
+      drawer: const myDrawer(),
+      body: Card(
+        color: Colors.blueAccent.shade100.withOpacity(0.5),
+        child: Wrap(
+          children: [
+            Center(
+              child: Text(
+                login,
+                style: textStyle,
+              ),
             ),
-          ),
-          semanticLabel: "Menyu",
-          backgroundColor: Colors.grey.shade400,
-          width: 220,
-          child: GestureDetector(
+            Center(
+              child: Text(
+                pass,
+                style: textStyle,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class myDrawer extends StatelessWidget {
+  const myDrawer({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(15),
+        ),
+      ),
+      semanticLabel: "Menyu",
+      width: 220,
+      child: ListView(
+        children: [
+          GestureDetector(
             onTap: () => Navigator.pushNamed(context, Worker.routeName),
-            child: ListView(
-              children: [
-                ListTile(
-                  leading: Icon(
-                    color: iconColor,
-                    Icons.exit_to_app,
-                    size: 25,
-                  ),
-                  title: Text(
-                    textAlign: TextAlign.left,
-                    "Siyahı Hazırla",
-                    style: styleMe(19, Colors.white),
-                    selectionColor: Colors.red,
-                  ),
-                )
-              ],
+            child: const ListTile(
+              leading: Icon(
+                Icons.list,
+                size: 25,
+              ),
+              title: Text(
+                textAlign: TextAlign.left,
+                "Siyahı Hazırla",
+              ),
             ),
           ),
-        ),
-      );
+          GestureDetector(
+            onTap: () {
+              db.clearDB();
+              Navigator.pushNamed(context, '/');
+            },
+            child: const ListTile(
+              leading: Icon(
+                Icons.list,
+                size: 25,
+              ),
+              title: Text(
+                textAlign: TextAlign.left,
+                "Çıxış",
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }

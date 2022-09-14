@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:routetest/pages/workNumberList.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import '../myWidgest/workElements.dart';
+import '../elements/workElements.dart';
 
 class Worker extends StatefulWidget {
   static const String routeName = "/worker";
@@ -19,11 +19,9 @@ class _WorkerState extends State<Worker> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade600,
       appBar: AppBar(
         centerTitle: true,
         title: Text(pageName[index]),
-        backgroundColor: Colors.grey.shade500,
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -46,9 +44,10 @@ class _WorkerState extends State<Worker> {
             axisDirection: Axis.horizontal,
             effect: const SlideEffect(
               spacing: 10,
-              activeDotColor: Colors.white54,
+              activeDotColor: Colors.grey,
               dotHeight: 15,
-              dotColor: Colors.blue,
+              dotColor: Colors.blueGrey,
+              // paintStyle: PaintingStyle.fill,
               dotWidth: 15,
             ),
           ),

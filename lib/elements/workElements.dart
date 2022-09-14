@@ -398,10 +398,6 @@ SnackBar ilanBar(
       duration: Duration(microseconds: time),
       content: Text(
         text,
-        style: styleMe(
-          15,
-          Colors.blue.shade300,
-        ),
       ),
       action: SnackBarAction(
         textColor: Colors.amber,

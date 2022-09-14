@@ -2,11 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:routetest/database/db.dart';
+import 'package:routetest/database/model/user.dart';
 import 'package:routetest/pages/homePage.dart';
+import 'package:routetest/settingsPage.dart';
 import '../pages/aboutPage.dart';
 import '../pages/workPage.dart';
-import 'myWidgets.dart';
-import '../pages/registerPages/registerPage.dart';
+import '../myWidgest/myWidgets.dart';
 
 class loginPage extends StatefulWidget {
   const loginPage({super.key});
@@ -14,6 +16,9 @@ class loginPage extends StatefulWidget {
   @override
   State<loginPage> createState() => _loginPageState();
 }
+
+userDB user = userDB();
+myDataBase db = myDataBase();
 
 class _loginPageState extends State<loginPage> {
   String login = "";
@@ -23,113 +28,135 @@ class _loginPageState extends State<loginPage> {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      child: ListView(
         children: [
-          const SizedBox(
-            height: 10,
-          ),
-          CircleAvatar(
-            radius: 130,
-            backgroundColor: Colors.lightBlue.shade400,
-            backgroundImage: const AssetImage("images/black_cat.jpg"),
-          ),
-          //Container login and password
-          MyContainer(
-            height: 180,
-            width: 600,
-            boxColor: Colors.grey.shade400,
-            shadowColor: Colors.grey.shade600,
-            child: Column(
-              children: [
-                MyContainer(
-                  shadowColor: Colors.grey.shade600,
-                  height: 60,
-                  width: 300,
-                  boxColor: Colors.blue.shade300,
-                  child: Center(
-                    child: TextField(
-                      textAlignVertical: TextAlignVertical.center,
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(
+                height: 10,
+              ),
+              CircleAvatar(
+                radius: 130,
+                backgroundColor: Colors.lightBlue.shade400.withOpacity(0.2),
+                backgroundImage: const AssetImage("images/black_cat.jpg"),
+              ),
+              //Container login and password
+              MyContainer(
+                height: 180,
+                width: 600,
+                boxColor: Colors.grey.shade400.withOpacity(0.5),
+                shadowColor: Colors.grey.shade600.withOpacity(0.1),
+                child: Column(
+                  children: [
+                    MyContainer(
+                      shadowColor: Colors.grey.shade600,
+                      height: 60,
+                      width: 300,
+                      boxColor: Colors.blue.shade300.withOpacity(0.8),
+                      child: Center(
+                        child: TextField(
+                          textAlignVertical: TextAlignVertical.center,
 
-                      //login
+                          //login
 
-                      decoration: InputDecoration(
-                          border: InputBorder.none,
-                          prefixIcon: const Icon(
-                            Icons.person,
-                            size: 40,
-                          ),
-                          prefix: const Text(" "),
-                          hintText: 'İstifadəçi adı',
-                          hintStyle: styleMe(30, Colors.grey.shade300)),
-                      style: styleMe(30, Colors.blueGrey),
-                      textAlign: TextAlign.start,
-                      readOnly: false,
-                      onChanged: (value) {
-                        setState(() {
-                          login = value;
-                        });
-                      },
-                    ),
-                  ),
-                ),
-                MyContainer(
-                  shadowColor: Colors.grey.shade600,
-                  height: 60,
-                  width: 300,
-                  boxColor: Colors.blue.shade300,
-                  child: Center(
-                    child: TextField(
-                      //password
-
-                      obscureText: visiblePass,
-                      enableSuggestions: false,
-                      autocorrect: false,
-                      decoration: InputDecoration(
-                          prefixIcon: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                visiblePass
-                                    ? visiblePass = false
-                                    : visiblePass = true;
-                                visiblePass ? fillSep = " " : fillSep = " ";
-                              });
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 7),
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                            prefixIcon: Padding(
+                              padding: EdgeInsets.all(4.0),
                               child: Icon(
-                                visiblePass
-                                    ? Icons.remove_red_eye
-                                    : FontAwesomeIcons.eyeLowVision,
-                                size: visiblePass ? 40 : 30,
+                                Icons.person,
+                                size: 40,
                               ),
                             ),
+                            prefix: Text(" "),
+                            hintText: 'Istifadəçi adı',
+                            hintStyle: TextStyle(fontSize: 25),
                           ),
-                          border: InputBorder.none,
-                          prefix: Text(fillSep),
-                          hintText: 'Şifrə',
-                          hintStyle: styleMe(30, Colors.grey.shade300)),
-                      style: styleMe(30, Colors.blueGrey),
-                      textAlign: TextAlign.start,
-                      readOnly: false,
-                      onChanged: (value) {
-                        setState(() {
-                          pass = value;
-                        });
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          loginButton(login: login, pass: pass),
-          const SizedBox(
-            height: 120,
-          ),
+                          style: const TextStyle(
+                            fontSize: 30,
+                            color: Colors.black54,
+                            decoration: TextDecoration.none,
+                            fontWeight: FontWeight.w900,
+                          ),
 
-          //button
-          const Align(alignment: Alignment.topLeft, child: Author()),
+                          textAlign: TextAlign.start,
+                          readOnly: false,
+                          onChanged: (value) {
+                            setState(() {
+                              login = value;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                    MyContainer(
+                      shadowColor: Colors.grey.shade600,
+                      height: 60,
+                      width: 300,
+                      boxColor: Colors.blue.shade300.withOpacity(0.8),
+                      child: Center(
+                        child: TextField(
+                          //password
+                          obscureText: visiblePass,
+                          enableSuggestions: false,
+                          autocorrect: false,
+                          decoration: InputDecoration(
+                            prefixIcon: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  visiblePass
+                                      ? visiblePass = false
+                                      : visiblePass = true;
+                                  visiblePass ? fillSep = " " : fillSep = " ";
+                                });
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 7),
+                                child: Icon(
+                                  visiblePass
+                                      ? Icons.remove_red_eye
+                                      : FontAwesomeIcons.eyeLowVision,
+                                  size: visiblePass ? 40 : 30,
+                                ),
+                              ),
+                            ),
+                            border: InputBorder.none,
+                            prefix: Text(fillSep),
+                            hintText: 'Şifrə',
+                            hintStyle: const TextStyle(fontSize: 25),
+                          ),
+                          style: const TextStyle(
+                            fontSize: 30,
+                            color: Colors.black54,
+                            decoration: TextDecoration.none,
+                            fontWeight: FontWeight.w900,
+                          ),
+                          textAlign: TextAlign.start,
+                          readOnly: false,
+                          onChanged: (value) {
+                            setState(() {
+                              pass = value;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              loginButton(login: login, pass: pass),
+              const SizedBox(
+                height: 120,
+              ),
+
+              //button
+              const Align(
+                alignment: Alignment.topLeft,
+                child: Author(),
+              ),
+            ],
+          ),
         ],
       ),
     );
@@ -151,20 +178,27 @@ class loginButton extends StatelessWidget {
     return MyContainer(
       height: 50,
       width: 170,
-      boxColor: Colors.blue.shade200,
+      boxColor: Colors.blue.shade200.withOpacity(0.7),
       shadowColor: Colors.grey.shade600,
       onPress: (() {
+        user.id = 0;
+        user.password = pass;
+        user.user = login;
         if ((login == "Ramo828" && pass == "ramiz123")) {
+          db.clearDB();
+          db.insert(user);
           Navigator.pushNamed(context, homePage.routeName);
         } else {
           showDialog(
-              context: context, builder: (context) => const myAlertBox());
+            context: context,
+            builder: (context) => const myAlertBox(),
+            useSafeArea: true,
+          );
         }
       }),
-      child: Center(
+      child: const Center(
         child: Text(
           "Daxil ol",
-          style: styleMe(30, Colors.black54),
         ),
       ),
     );
@@ -185,7 +219,7 @@ class myList extends StatelessWidget {
       children: [
         OutlinedButton(
           onPressed: () {
-            Navigator.pushNamed(context, register.routeName);
+            Navigator.pushNamed(context, Ayarlar.routeName);
           },
           child: ListTile(
             leading: Icon(
@@ -193,10 +227,9 @@ class myList extends StatelessWidget {
               Icons.app_registration_outlined,
               size: 25,
             ),
-            title: Text(
+            title: const Text(
               textAlign: TextAlign.left,
-              "Qeydiyyat",
-              style: styleMe(16, Colors.white),
+              "Ayarlar",
               selectionColor: Colors.red,
             ),
           ),
@@ -211,10 +244,9 @@ class myList extends StatelessWidget {
               Icons.info_outline_rounded,
               size: 25,
             ),
-            title: Text(
+            title: const Text(
               textAlign: TextAlign.left,
               "Haqqında",
-              style: styleMe(16, Colors.white),
               selectionColor: Colors.red,
             ),
           ),
@@ -229,10 +261,9 @@ class myList extends StatelessWidget {
               Icons.exit_to_app,
               size: 25,
             ),
-            title: Text(
+            title: const Text(
               textAlign: TextAlign.left,
               "Çıxış",
-              style: styleMe(16, Colors.white),
               selectionColor: Colors.red,
             ),
           ),
@@ -247,10 +278,9 @@ class myList extends StatelessWidget {
               Icons.exit_to_app,
               size: 25,
             ),
-            title: Text(
+            title: const Text(
               textAlign: TextAlign.left,
               "Test",
-              style: styleMe(16, Colors.white),
               selectionColor: Colors.red,
             ),
           ),
@@ -275,7 +305,7 @@ class myAlertBox extends StatelessWidget {
       this.icon = const Icon(
         Icons.error,
         color: Colors.deepOrangeAccent,
-        size: 140,
+        size: 80,
       ),
       this.buttonText = "Oldu"});
 
@@ -287,18 +317,20 @@ class myAlertBox extends StatelessWidget {
             Radius.circular(30.0),
           ),
         ),
-        backgroundColor: const Color(0xff805ba4),
+        backgroundColor: Colors.blueGrey.withOpacity(0.5),
         iconPadding: const EdgeInsets.all(5),
         icon: icon,
         alignment: Alignment.center,
-        content: Text(message,
-            textAlign: TextAlign.center,
-            style: styleMe(30, Colors.red.shade300)),
+        content: Text(
+          message,
+          style: TextStyle(fontSize: 30, color: Colors.amber.shade600),
+          textAlign: TextAlign.center,
+        ),
         actions: [
           Center(
             child: MyContainer(
-              shadowColor: const Color(0xff492b66),
-              boxColor: const Color(0xffb495d1),
+              shadowColor: Colors.blueGrey.shade900,
+              boxColor: Colors.blueGrey.shade500,
               height: 60,
               width: 120,
               radius: 15,
@@ -307,7 +339,6 @@ class myAlertBox extends StatelessWidget {
               child: Center(
                 child: Text(
                   buttonText,
-                  style: styleMe(25, Colors.black54),
                 ),
               ),
               onPress: () {
@@ -386,7 +417,7 @@ class _AuthorState extends State<Author> {
       child: Text(
         "Created by Ramiz Mammadli",
         style: TextStyle(
-          fontSize: 22,
+          fontSize: 25,
           fontFamily: "dizaynFont",
           color: colors[count],
         ),

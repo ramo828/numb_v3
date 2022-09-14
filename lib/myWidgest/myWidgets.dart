@@ -1,12 +1,6 @@
 // ignore: file_names
 import 'package:flutter/material.dart';
 
-TextStyle styleMe(double size, Color reng) => TextStyle(
-      fontSize: size,
-      color: reng,
-      fontWeight: FontWeight.bold,
-    );
-
 class MyContainer extends StatelessWidget {
   final double radius;
   final double mesafe;

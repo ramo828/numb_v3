@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:routetest/myWidgest/myWidgets.dart';
+import "../backent/funtions.dart";
 
 List<String> data = [];
 
@@ -12,7 +12,7 @@ class numberList extends StatefulWidget {
 
   addNumber(List<String> numbers) {
     for (int i = 0; i < numbers.length; i++) {
-      data.add(numbers[i]);
+      data.add(func().splitNumberData(numbers[i]));
     }
   }
 
@@ -27,22 +27,16 @@ class numberList extends StatefulWidget {
 class _numberListState extends State<numberList> {
   PaginatedDataTable pageData() {
     List<DataColumn> dc = [
-      DataColumn(
+      const DataColumn(
         label: Text(
           "Sıra no",
-          style: styleMe(
-            20,
-            Colors.purple,
-          ),
+          style: TextStyle(fontSize: 25),
         ),
       ),
-      DataColumn(
+      const DataColumn(
         label: Text(
           "Nömrə",
-          style: styleMe(
-            20,
-            Colors.purple,
-          ),
+          style: TextStyle(fontSize: 25),
         ),
       ),
     ];
@@ -72,7 +66,10 @@ class _numberListState extends State<numberList> {
 class dataSource extends DataTableSource {
   List<String> value;
   dataSource(this.value);
-
+  TextStyle style = const TextStyle(
+    fontSize: 20,
+    color: Colors.amber,
+  );
   @override
   DataRow? getRow(int index) {
     // ignore: todo
@@ -80,20 +77,16 @@ class dataSource extends DataTableSource {
     return DataRow.byIndex(
       index: index,
       cells: [
-        DataCell(Text(
-          "${index + 1},",
-          style: const TextStyle(
-            color: Colors.amber,
-            fontSize: 20,
+        DataCell(
+          Text(
+            "${index + 1}",
+            style: style,
           ),
-        )),
+        ),
         DataCell(
           Text(
             value[index],
-            style: const TextStyle(
-              color: Colors.amber,
-              fontSize: 20,
-            ),
+            style: style,
           ),
         )
       ],
