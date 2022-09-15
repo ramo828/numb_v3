@@ -1,7 +1,6 @@
 import 'package:sqflite/sqflite.dart' as sql;
 import 'package:sqflite/sqflite.dart';
 import 'model/user.dart';
-// ignore: depend_on_referenced_packages
 import 'package:path/path.dart' as path;
 
 class myDataBase {
@@ -103,4 +102,14 @@ class myDataBase {
 
   Future<bool> databaseExists(String path) =>
       databaseFactory.databaseExists(path);
+
+  Future<String> getUser(String key) async {
+    Database db = await open();
+    List<Map<String, Object?>> user = await getItem(0);
+    String data = user[0][key].toString();
+    if (data != null)
+      return data;
+    else
+      return "Bos";
+  }
 }

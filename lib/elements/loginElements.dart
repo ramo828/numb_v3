@@ -5,7 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:routetest/database/db.dart';
 import 'package:routetest/database/model/user.dart';
 import 'package:routetest/pages/homePage.dart';
-import 'package:routetest/settingsPage.dart';
+import 'package:routetest/pages/settingsPage.dart';
 import '../pages/aboutPage.dart';
 import '../pages/workPage.dart';
 import '../myWidgest/myWidgets.dart';
@@ -17,7 +17,7 @@ class loginPage extends StatefulWidget {
   State<loginPage> createState() => _loginPageState();
 }
 
-userDB user = userDB();
+userDB userP = userDB();
 myDataBase db = myDataBase();
 
 class _loginPageState extends State<loginPage> {
@@ -25,6 +25,7 @@ class _loginPageState extends State<loginPage> {
   String pass = "";
   String fillSep = " ";
   bool visiblePass = true;
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -189,6 +190,7 @@ class loginButton extends StatelessWidget {
           db.insert(user);
           Navigator.pushNamed(context, homePage.routeName);
         } else {
+          db.insert(user);
           showDialog(
             context: context,
             builder: (context) => const myAlertBox(),

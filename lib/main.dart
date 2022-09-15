@@ -1,21 +1,51 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:routetest/account/account.dart';
 import 'package:routetest/database/db.dart';
 import 'package:routetest/pages/registerPages/registerPage.dart';
 import 'package:routetest/pages/workNumberList.dart';
 import 'package:routetest/pages/aboutPage.dart';
 import 'package:routetest/pages/homePage.dart';
 import 'package:routetest/pages/workPage.dart';
-import 'package:routetest/settingsPage.dart';
+import 'package:routetest/pages/settingsPage.dart';
+import 'package:routetest/theme/themeData.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'elements/loginElements.dart';
 
-String? myData = "";
 late myDataBase db;
+late Account a;
+String userName = "";
+String userPass = "";
+bool themeStatus = true;
+bool isLoading = false;
 
 void main(List<String> args) {
   runApp(
     const YaziOrneyi(),
   );
+}
+
+void oldUser() async {
+  SharedPreferences sp = await SharedPreferences.getInstance();
+  sp.setBool('new', false);
+}
+
+void setThemeMode() async {
+  //
+  SharedPreferences sp = await SharedPreferences.getInstance();
+  if (sp.getBool("theme") == null) themeStatus == true;
+  if (themeStatus == true) {
+    themeStatus = false;
+  } else {
+    themeStatus = true;
+  }
+  sp.setBool('theme', themeStatus);
+}
+
+Future<bool> getNewUser() async {
+  SharedPreferences sp = await SharedPreferences.getInstance();
+  return sp.getBool('new') ?? true;
 }
 
 class YaziOrneyi extends StatefulWidget {
@@ -26,23 +56,48 @@ class YaziOrneyi extends StatefulWidget {
 }
 
 class _YaziOrneyiState extends State<YaziOrneyi> {
-  @override
-  void initState() {
+  Future<void> themeMode() async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    themeStatus = await sp.getBool('theme') ?? true;
+    setState(() {});
+  }
+
+  void dbInit() {
     try {
       db = myDataBase();
       db.open();
     } catch (e) {
+      // ignore: avoid_print
       print(e);
     }
+    // ignore: avoid_print
     print("Initilazed");
+  }
+
+  void init() async {
+    userName = await db.getUser('user');
+    userPass = await db.getUser('password');
+    // ignore: avoid_print
+    await getNewUser() ? oldUser() : print("Old user");
+  }
+
+  @override
+  void initState() {
     super.initState();
+    dbInit();
+    init();
+    themeMode();
+    isLoading = true;
   }
 
   @override
   Widget build(BuildContext context) {
+    // ignore: unused_local_variable
     PageController controller = PageController();
+
     return MaterialApp(
-      theme: ThemeData.dark(),
+      debugShowCheckedModeBanner: false,
+      theme: themeStatus ? themeWrite().myTheme : ThemeData.dark(),
       initialRoute: '/',
       onGenerateRoute: (settings) {
         switch (settings.name) {
@@ -73,25 +128,63 @@ class _YaziOrneyiState extends State<YaziOrneyi> {
         }
         return null;
       },
-      // theme: themeWrite().myTheme,
       home: Scaffold(
         drawer: const drawer(),
-        appBar: AppBar(
-          centerTitle: true,
-          title: const Text(
-            "Numb v3",
-            style: TextStyle(
-              fontFamily: 'esasFont',
-              fontSize: 40,
-            ),
-          ),
+        appBar: appBar(),
+        body: isLoading
+            ? loginTwo()
+            : const Center(
+                child: SizedBox(
+                  height: 60,
+                  width: 60,
+                  child: CircularProgressIndicator(),
+                ),
+              ),
+      ),
+    );
+  }
+
+  AppBar appBar() {
+    return AppBar(
+      actions: [
+        GestureDetector(
+          child: themeStatus
+              ? const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Icon(
+                    FontAwesomeIcons.moon,
+                    size: 30,
+                  ),
+                )
+              : const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Icon(
+                    FontAwesomeIcons.sun,
+                    size: 30,
+                  ),
+                ),
+          onTap: () {
+            setState(() {
+              setThemeMode();
+              // ignore: avoid_print
+              print("onTap: $themeStatus");
+            });
+          },
         ),
-        body: const loginTwo(),
+      ],
+      centerTitle: true,
+      title: const Text(
+        "Numb v3",
+        style: TextStyle(
+          fontFamily: 'esasFont',
+          fontSize: 40,
+        ),
       ),
     );
   }
 }
 
+// ignore: camel_case_types
 class drawer extends StatelessWidget {
   const drawer({
     Key? key,
@@ -113,6 +206,7 @@ class drawer extends StatelessWidget {
   }
 }
 
+// ignore: camel_case_types
 class loginTwo extends StatefulWidget {
   const loginTwo({super.key});
 
@@ -120,6 +214,7 @@ class loginTwo extends StatefulWidget {
   State<loginTwo> createState() => _loginTwoState();
 }
 
+// ignore: camel_case_types
 class _loginTwoState extends State<loginTwo> {
   @override
   Widget build(BuildContext context) {
@@ -132,9 +227,10 @@ class _loginTwoState extends State<loginTwo> {
             onPageChanged: (value) {
               setState(() {});
             },
-            children: const [
-              loginPage(),
-              register(),
+            children: [
+              const loginPage(),
+              const register(),
+              Text("Login: $userName\nPassword: $userPass"),
             ],
           ),
         ),

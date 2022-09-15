@@ -1,6 +1,7 @@
-
+// ignore: camel_case_types
 class func {
   String splitNumberData(String data) {
+    // ignore: unnecessary_null_comparison
     if (data.isNotEmpty || data != null) {
       String pref = data.substring(0, 2);
       String a1 = data.substring(2, 5);

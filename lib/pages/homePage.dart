@@ -19,10 +19,9 @@ String pass = "";
 
 class _homePageState extends State<homePage> {
   Future<void> getUser() async {
-    // ignore: non_constant_identifier_names
-    List<Map<String, Object?>> user = await db.getItem(0);
-    login = user[0]['user'].toString();
-    pass = user[0]['password'].toString();
+    pass = await db.getUser('password');
+
+    login = await db.getUser('user');
     setState(() {});
   }
 

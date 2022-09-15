@@ -39,6 +39,7 @@ String getCategory(String keyData) {
     "Qızıl": "1582551461421619154",
     "Platin": "1582551437850968791",
   };
+  // ignore: unnecessary_null_comparison
   if (keyData == null) throw ("Null key");
   return category[keyData].toString();
 }
