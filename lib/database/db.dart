@@ -24,7 +24,8 @@ class myDataBase {
 
   Future<void> createDB(Database db) async {
     await db.execute("""
-    CREATE TABLE if NOT EXISTS $tableName (id int, user TEXT, password TEXT)
+    CREATE TABLE if NOT EXISTS $tableName (
+    id int, user TEXT, password TEXT)
 """);
   }
 // Butun melumatlari tek datadan almaq ucun

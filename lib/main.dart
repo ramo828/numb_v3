@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:routetest/account/account.dart';
 import 'package:routetest/database/db.dart';
 import 'package:routetest/pages/registerPages/registerPage.dart';
@@ -15,14 +16,19 @@ import 'elements/loginElements.dart';
 
 late myDataBase db;
 late Account a;
+ThemeData? theme;
 String userName = "";
 String userPass = "";
 bool themeStatus = true;
-bool isLoading = false;
 
 void main(List<String> args) {
   runApp(
-    const YaziOrneyi(),
+    ChangeNotifierProvider<themeWrite>(
+      child: const YaziOrneyi(),
+      create: (context) {
+        return themeWrite();
+      },
+    ),
   );
 }
 
@@ -31,18 +37,7 @@ void oldUser() async {
   sp.setBool('new', false);
 }
 
-void setThemeMode() async {
-  //
-  SharedPreferences sp = await SharedPreferences.getInstance();
-  if (sp.getBool("theme") == null) themeStatus == true;
-  if (themeStatus == true) {
-    themeStatus = false;
-  } else {
-    themeStatus = true;
-  }
-  sp.setBool('theme', themeStatus);
-}
-
+//Ilk defe programlari yekleyenler ucun
 Future<bool> getNewUser() async {
   SharedPreferences sp = await SharedPreferences.getInstance();
   return sp.getBool('new') ?? true;
@@ -56,38 +51,29 @@ class YaziOrneyi extends StatefulWidget {
 }
 
 class _YaziOrneyiState extends State<YaziOrneyi> {
-  Future<void> themeMode() async {
-    SharedPreferences sp = await SharedPreferences.getInstance();
-    themeStatus = await sp.getBool('theme') ?? true;
-    setState(() {});
-  }
-
   void dbInit() {
     try {
       db = myDataBase();
       db.open();
     } catch (e) {
-      // ignore: avoid_print
-      print(e);
+      debugPrint(e.toString());
     }
-    // ignore: avoid_print
-    print("Initilazed");
+    debugPrint("Initilazed");
   }
 
   void init() async {
     userName = await db.getUser('user');
     userPass = await db.getUser('password');
-    // ignore: avoid_print
-    await getNewUser() ? oldUser() : print("Old user");
+    await getNewUser() ? oldUser() : debugPrint("Old user");
   }
 
   @override
   void initState() {
+    Provider.of<themeWrite>(context, listen: false).themeInit();
+
     super.initState();
     dbInit();
     init();
-    themeMode();
-    isLoading = true;
   }
 
   @override
@@ -97,7 +83,7 @@ class _YaziOrneyiState extends State<YaziOrneyi> {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: themeStatus ? themeWrite().myTheme : ThemeData.dark(),
+      theme: Provider.of<themeWrite>(context).theme,
       initialRoute: '/',
       onGenerateRoute: (settings) {
         switch (settings.name) {
@@ -131,15 +117,7 @@ class _YaziOrneyiState extends State<YaziOrneyi> {
       home: Scaffold(
         drawer: const drawer(),
         appBar: appBar(),
-        body: isLoading
-            ? loginTwo()
-            : const Center(
-                child: SizedBox(
-                  height: 60,
-                  width: 60,
-                  child: CircularProgressIndicator(),
-                ),
-              ),
+        body: const loginTwo(),
       ),
     );
   }
@@ -148,7 +126,7 @@ class _YaziOrneyiState extends State<YaziOrneyi> {
     return AppBar(
       actions: [
         GestureDetector(
-          child: themeStatus
+          child: !Provider.of<themeWrite>(context, listen: false).getThemeMode
               ? const Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Icon(
@@ -165,9 +143,7 @@ class _YaziOrneyiState extends State<YaziOrneyi> {
                 ),
           onTap: () {
             setState(() {
-              setThemeMode();
-              // ignore: avoid_print
-              print("onTap: $themeStatus");
+              Provider.of<themeWrite>(context, listen: false).toggle();
             });
           },
         ),
@@ -227,10 +203,9 @@ class _loginTwoState extends State<loginTwo> {
             onPageChanged: (value) {
               setState(() {});
             },
-            children: [
-              const loginPage(),
-              const register(),
-              Text("Login: $userName\nPassword: $userPass"),
+            children: const [
+              loginPage(),
+              register(),
             ],
           ),
         ),

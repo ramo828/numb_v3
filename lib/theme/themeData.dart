@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 ThemeData default1 = ThemeData(
-  // primaryColor: Colors.grey.shade400,
-  // primarySwatch: Colors.blueGrey,
+  // brightness: Brightness.dark,
   scaffoldBackgroundColor: Colors.grey.shade400,
   appBarTheme: AppBarTheme(
     backgroundColor: Colors.grey.shade500,
@@ -13,7 +12,6 @@ ThemeData default1 = ThemeData(
         Radius.circular(5.0),
       ),
     ),
-    // toolbarHeight: 30,
   ),
   materialTapTargetSize: MaterialTapTargetSize.padded,
   drawerTheme: DrawerThemeData(
@@ -30,20 +28,20 @@ ThemeData default1 = ThemeData(
   textTheme: TextTheme(
     bodyText1: TextStyle(
       fontSize: 21.0,
-      fontFamily: 'esasFont',
+      // fontFamily: 'esasFont',
       color: Colors.grey.shade300,
     ),
     bodyText2: const TextStyle(
       fontSize: 25.0,
-      fontFamily: 'esasFont',
+      // fontFamily: 'esasFont',
       color: Colors.white,
     ),
   ),
   hintColor: Colors.white,
-  fontFamily: 'esasFont',
+  // fontFamily: 'esasFont',
   dataTableTheme: DataTableThemeData(
     headingTextStyle: TextStyle(
-      fontFamily: 'esasFont',
+      // fontFamily: 'esasFont',
       fontSize: 20,
       color: Colors.purple.shade500,
     ),
@@ -53,7 +51,7 @@ ThemeData default1 = ThemeData(
     actionTextColor: Colors.white,
     contentTextStyle: const TextStyle(
       color: Colors.white,
-      fontFamily: 'esasFont',
+      // fontFamily: 'esasFont',
       fontSize: 20,
     ),
   ),
@@ -69,35 +67,46 @@ ThemeData dark = ThemeData.dark();
 
 // ignore: unused_element
 class themeWrite with ChangeNotifier {
-  SharedPreferences? _shared;
-
   bool _dark = true;
+  bool _darkDef = true;
 
-  Future<void> _createdPrefObj() async {
-    _shared = await SharedPreferences.getInstance();
+  void themeInit() async {
+    _darkDef = await getMode;
+    debugPrint("Dark : ${_darkDef}");
+    notifyListeners();
   }
 
   void toggle() async {
-    await loadData();
-    _dark ? _dark = false : _dark = true;
-    print(getMode);
+    await getMode ? _dark = false : _dark = true;
     saveData(_dark);
+    _darkDef = await getMode;
+    debugPrint("$_darkDef");
     notifyListeners();
   }
 
-  void saveData(bool value) {
-    _shared?.setBool("dark", value);
-    notifyListeners();
+  ThemeData get theme {
+    if (_darkDef == true)
+      return dark;
+    else
+      return default1;
   }
 
-  bool? get getMode => _shared?.getBool("dark");
+  void saveData(bool value) async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
 
-  Future loadData() async {
-    await _createdPrefObj();
+    sp.setBool("dark", value);
   }
 
-  ThemeData get myTheme {
-    loadData();
-    return getMode == true ? dark : default1;
+  Future<bool> get getMode async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    bool value = await sp.getBool("dark")!;
+    if (value != null)
+      return value;
+    else
+      return false;
+  }
+
+  bool get getThemeMode {
+    return _darkDef;
   }
 }

@@ -64,7 +64,7 @@ class _loginPageState extends State<loginPage> {
                           decoration: const InputDecoration(
                             border: InputBorder.none,
                             prefixIcon: Padding(
-                              padding: EdgeInsets.all(4.0),
+                              padding: EdgeInsets.all(5.0),
                               child: Icon(
                                 Icons.person,
                                 size: 40,
@@ -72,7 +72,9 @@ class _loginPageState extends State<loginPage> {
                             ),
                             prefix: Text(" "),
                             hintText: 'Istifadəçi adı',
-                            hintStyle: TextStyle(fontSize: 25),
+                            hintStyle: TextStyle(
+                              fontSize: 25,
+                            ),
                           ),
                           style: const TextStyle(
                             fontSize: 30,
@@ -201,6 +203,7 @@ class loginButton extends StatelessWidget {
       child: const Center(
         child: Text(
           "Daxil ol",
+          style: TextStyle(fontSize: 30),
         ),
       ),
     );
