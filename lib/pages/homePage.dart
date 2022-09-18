@@ -19,9 +19,9 @@ String pass = "";
 
 class _homePageState extends State<homePage> {
   Future<void> getUser() async {
-    pass = await db.getUser('password');
+    // pass = await db.getUser('password');
 
-    login = await db.getUser('user');
+    // login = await db.getUser('user');
     setState(() {});
   }
 

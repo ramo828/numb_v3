@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -13,6 +15,7 @@ import 'package:routetest/theme/themeData.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'elements/loginElements.dart';
+import 'firebase_options.dart';
 
 late myDataBase db;
 late Account a;
@@ -21,10 +24,11 @@ String userName = "";
 String userPass = "";
 bool themeStatus = true;
 
-void main(List<String> args) {
+void main(List<String> args) async {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(
     ChangeNotifierProvider<themeWrite>(
-      child: const YaziOrneyi(),
+      child: YaziOrneyi(),
       create: (context) {
         return themeWrite();
       },
@@ -44,13 +48,14 @@ Future<bool> getNewUser() async {
 }
 
 class YaziOrneyi extends StatefulWidget {
-  const YaziOrneyi({super.key});
-
+  YaziOrneyi({super.key});
   @override
   State<YaziOrneyi> createState() => _YaziOrneyiState();
 }
 
 class _YaziOrneyiState extends State<YaziOrneyi> {
+  final Future<FirebaseApp> _firebase = Firebase.initializeApp();
+
   void dbInit() {
     try {
       db = myDataBase();
@@ -61,11 +66,11 @@ class _YaziOrneyiState extends State<YaziOrneyi> {
     debugPrint("Initilazed");
   }
 
-  void init() async {
-    userName = await db.getUser('user');
-    userPass = await db.getUser('password');
-    await getNewUser() ? oldUser() : debugPrint("Old user");
-  }
+  // void init() async {
+  //   userName = await db.getUser('user');
+  //   userPass = await db.getUser('password');
+  //   await getNewUser() ? oldUser() : debugPrint("Old user");
+  // }
 
   @override
   void initState() {
@@ -73,7 +78,7 @@ class _YaziOrneyiState extends State<YaziOrneyi> {
 
     super.initState();
     dbInit();
-    init();
+    // init();
   }
 
   @override
@@ -82,44 +87,60 @@ class _YaziOrneyiState extends State<YaziOrneyi> {
     PageController controller = PageController();
 
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: Provider.of<themeWrite>(context).theme,
-      initialRoute: '/',
-      onGenerateRoute: (settings) {
-        switch (settings.name) {
-          case homePage.routeName:
-            return MaterialPageRoute(
-              builder: (context) => const homePage(),
-            );
-          case Haqqinda.routeName:
-            return MaterialPageRoute(
-              builder: (context) => const Haqqinda(),
-            );
-          case Worker.routeName:
-            return MaterialPageRoute(
-              builder: (context) => const Worker(),
-            );
-          case numberList.routeName:
-            return MaterialPageRoute(
-              builder: (context) => const numberList(),
-            );
-          case register.routeName:
-            return MaterialPageRoute(
-              builder: (context) => const register(),
-            );
-          case Ayarlar.routeName:
-            return MaterialPageRoute(
-              builder: (context) => const Ayarlar(),
-            );
-        }
-        return null;
-      },
-      home: Scaffold(
-        drawer: const drawer(),
-        appBar: appBar(),
-        body: const loginTwo(),
-      ),
-    );
+        debugShowCheckedModeBanner: false,
+        theme: Provider.of<themeWrite>(context).theme,
+        initialRoute: '/',
+        onGenerateRoute: (settings) {
+          switch (settings.name) {
+            case homePage.routeName:
+              return MaterialPageRoute(
+                builder: (context) => const homePage(),
+              );
+            case Haqqinda.routeName:
+              return MaterialPageRoute(
+                builder: (context) => const Haqqinda(),
+              );
+            case Worker.routeName:
+              return MaterialPageRoute(
+                builder: (context) => const Worker(),
+              );
+            case numberList.routeName:
+              return MaterialPageRoute(
+                builder: (context) => const numberList(),
+              );
+            case register.routeName:
+              return MaterialPageRoute(
+                builder: (context) => const register(),
+              );
+            case Ayarlar.routeName:
+              return MaterialPageRoute(
+                builder: (context) => const Ayarlar(),
+              );
+          }
+          return null;
+        },
+        home: FutureBuilder(
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return const Center(
+                child: Text(
+                  "Problem yarandi",
+                ),
+              );
+            } else if (snapshot.hasData) {
+              return Scaffold(
+                drawer: const drawer(),
+                appBar: appBar(),
+                body: const loginTwo(),
+              );
+            } else {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          },
+          future: _firebase,
+        ));
   }
 
   AppBar appBar() {
@@ -141,10 +162,19 @@ class _YaziOrneyiState extends State<YaziOrneyi> {
                     size: 30,
                   ),
                 ),
-          onTap: () {
+          onTap: () async {
+            FirebaseFirestore firestore = FirebaseFirestore.instance;
+            // CollectionReference test =
+            //     FirebaseFirestore.instance.collection('test');
+            // test.add({'ilkTest': '${counter}'});
+            var userData = firestore.collection('users');
+            var userRef = await userData.get();
+            List userList = userRef.docs;
+            print(userList[0].data());
             setState(() {
               Provider.of<themeWrite>(context, listen: false).toggle();
             });
+            counter++;
           },
         ),
       ],
@@ -158,6 +188,8 @@ class _YaziOrneyiState extends State<YaziOrneyi> {
       ),
     );
   }
+
+  int counter = 0;
 }
 
 // ignore: camel_case_types

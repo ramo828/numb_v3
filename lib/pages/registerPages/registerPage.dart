@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:routetest/backent/firebaseControl.dart';
 import 'package:routetest/database/db.dart';
 import 'package:routetest/database/model/user.dart';
+
+import '../../elements/workElements.dart';
 
 class register extends StatefulWidget {
   const register({super.key});
@@ -11,19 +14,22 @@ class register extends StatefulWidget {
 
 final PageController controller = PageController();
 
+late String _user;
+late String _pass;
+
 class _registerState extends State<register> {
-  final userDB _user = userDB();
-  myDataBase db = myDataBase();
+  // final userDB _user = userDB();
+  // myDataBase db = myDataBase();
 
   @override
   void initState() {
     // TODO: implement initState
-    try {
-      db = myDataBase();
-      db.open();
-    } catch (e) {
-      print(e);
-    }
+    // try {
+    //   db = myDataBase();
+    //   db.open();
+    // } catch (e) {
+    //   print(e);
+    // }
     super.initState();
   }
 
@@ -44,7 +50,7 @@ class _registerState extends State<register> {
                         hintText: "Login",
                       ),
                       onChanged: (value) {
-                        _user.user = value;
+                        _user = value;
                       },
                     ),
                   ),
@@ -58,14 +64,14 @@ class _registerState extends State<register> {
                         hintText: "Parol",
                       ),
                       onChanged: (value) {
-                        _user.password = value;
+                        _pass = value;
                       },
                     ),
                   ),
                 ),
                 OutlinedButton(
                   onPressed: () {
-                    add();
+                    add(_user, _pass);
                   },
                   child: const Text("Qeydiyyat"),
                 )
@@ -77,12 +83,21 @@ class _registerState extends State<register> {
     );
   }
 
-  Future<void> add() async {
-    List<Map<String, Object?>> user = await db.getItem(0);
-    _user.id = 0;
-    final netice = await db.insert(_user);
-    print(user[0]['password']);
-    print(user.length);
-    print(netice);
+  void add(String login, String password) {
+    try {
+      firebaseControl fireControl = firebaseControl();
+      fireControl.createUser(login, password);
+    } catch (e) {
+      var data = ilanBar(e.toString(), "Oldu", 1000000, () {
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      });
+      ScaffoldMessenger.of(context).showSnackBar(data);
+    }
   }
+  // List<Map<String, Object?>> user = await db.getItem(0);
+  // _user.id = 0;
+  // final netice = await db.insert(_user);
+  // print(user[0]['password']);
+  // print(user.length);
+  // print(netice);
 }

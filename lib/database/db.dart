@@ -45,7 +45,10 @@ class myDataBase {
       where: "id = ?",
       whereArgs: [id],
     );
-    return map;
+    if (map != null)
+      return map;
+    else
+      throw ("getItem() funksiyasinda null data alindi");
   }
 
 // ID gore silmek ucun
@@ -104,13 +107,13 @@ class myDataBase {
   Future<bool> databaseExists(String path) =>
       databaseFactory.databaseExists(path);
 
-  Future<String> getUser(String key) async {
-    Database db = await open();
-    List<Map<String, Object?>> user = await getItem(0);
-    String data = user[0][key].toString();
-    if (data != null)
-      return data;
-    else
-      return "Bos";
-  }
+  // Future<String> getUser(String key) async {
+  //   Database db = await open();
+  //   List<Map<String, Object?>> user = await getItem(0);
+  //   String data = user[0][key].toString();
+  //   if (data != null)
+  //     return data;
+  //   else
+  //     return "Bos";
+  // }
 }

@@ -99,7 +99,7 @@ class themeWrite with ChangeNotifier {
 
   Future<bool> get getMode async {
     SharedPreferences sp = await SharedPreferences.getInstance();
-    bool value = await sp.getBool("dark")!;
+    bool value = await sp.getBool("dark") ?? true;
     if (value != null)
       return value;
     else

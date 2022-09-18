@@ -1,7 +1,10 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:routetest/backent/firebaseControl.dart';
 import 'package:routetest/database/db.dart';
 import 'package:routetest/database/model/user.dart';
 import 'package:routetest/pages/homePage.dart';
@@ -64,7 +67,7 @@ class _loginPageState extends State<loginPage> {
                           decoration: const InputDecoration(
                             border: InputBorder.none,
                             prefixIcon: Padding(
-                              padding: EdgeInsets.all(5.0),
+                              padding: EdgeInsets.all(6.0),
                               child: Icon(
                                 Icons.person,
                                 size: 40,
@@ -99,49 +102,52 @@ class _loginPageState extends State<loginPage> {
                       width: 300,
                       boxColor: Colors.blue.shade300.withOpacity(0.8),
                       child: Center(
-                        child: TextField(
-                          //password
-                          obscureText: visiblePass,
-                          enableSuggestions: false,
-                          autocorrect: false,
-                          decoration: InputDecoration(
-                            prefixIcon: GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  visiblePass
-                                      ? visiblePass = false
-                                      : visiblePass = true;
-                                  visiblePass ? fillSep = " " : fillSep = " ";
-                                });
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 7),
-                                child: Icon(
-                                  visiblePass
-                                      ? Icons.remove_red_eye
-                                      : FontAwesomeIcons.eyeLowVision,
-                                  size: visiblePass ? 40 : 30,
+                        child: Padding(
+                          padding: const EdgeInsets.all(3.0),
+                          child: TextField(
+                            //password
+                            obscureText: visiblePass,
+                            enableSuggestions: false,
+                            autocorrect: false,
+                            decoration: InputDecoration(
+                              prefixIcon: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    visiblePass
+                                        ? visiblePass = false
+                                        : visiblePass = true;
+                                    visiblePass ? fillSep = " " : fillSep = " ";
+                                  });
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 7),
+                                  child: Icon(
+                                    visiblePass
+                                        ? Icons.remove_red_eye
+                                        : FontAwesomeIcons.eyeLowVision,
+                                    size: visiblePass ? 40 : 30,
+                                  ),
                                 ),
                               ),
+                              border: InputBorder.none,
+                              prefix: Text(fillSep),
+                              hintText: 'Şifrə',
+                              hintStyle: const TextStyle(fontSize: 25),
                             ),
-                            border: InputBorder.none,
-                            prefix: Text(fillSep),
-                            hintText: 'Şifrə',
-                            hintStyle: const TextStyle(fontSize: 25),
+                            style: const TextStyle(
+                              fontSize: 30,
+                              color: Colors.black54,
+                              decoration: TextDecoration.none,
+                              fontWeight: FontWeight.w900,
+                            ),
+                            textAlign: TextAlign.start,
+                            readOnly: false,
+                            onChanged: (value) {
+                              setState(() {
+                                pass = value;
+                              });
+                            },
                           ),
-                          style: const TextStyle(
-                            fontSize: 30,
-                            color: Colors.black54,
-                            decoration: TextDecoration.none,
-                            fontWeight: FontWeight.w900,
-                          ),
-                          textAlign: TextAlign.start,
-                          readOnly: false,
-                          onChanged: (value) {
-                            setState(() {
-                              pass = value;
-                            });
-                          },
                         ),
                       ),
                     ),
@@ -183,11 +189,13 @@ class loginButton extends StatelessWidget {
       width: 170,
       boxColor: Colors.blue.shade200.withOpacity(0.7),
       shadowColor: Colors.grey.shade600,
-      onPress: (() {
+      onPress: (() async {
         user.id = 0;
         user.password = pass;
         user.user = login;
-        if ((login == "Ramo828" && pass == "ramiz123")) {
+        firebaseControl firebase_control = firebaseControl();
+
+        if (await firebase_control.loginControl(login, pass)) {
           db.clearDB();
           db.insert(user);
           Navigator.pushNamed(context, homePage.routeName);
