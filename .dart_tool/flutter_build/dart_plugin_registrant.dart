@@ -7,6 +7,7 @@
 
 import 'dart:io'; // flutter_ignore: dart_io_import.
 import 'package:shared_preferences_android/shared_preferences_android.dart';
+import 'package:url_launcher_android/url_launcher_android.dart';
 import 'package:shared_preferences_ios/shared_preferences_ios.dart';
 import 'package:shared_preferences_linux/shared_preferences_linux.dart';
 import 'package:shared_preferences_macos/shared_preferences_macos.dart';
@@ -23,6 +24,16 @@ class _PluginRegistrant {
       } catch (err) {
         print(
           '`shared_preferences_android` threw an error: $err. '
+          'The app may not function as expected until you remove this plugin from pubspec.yaml'
+        );
+        rethrow;
+      }
+
+      try {
+        UrlLauncherAndroid.registerWith();
+      } catch (err) {
+        print(
+          '`url_launcher_android` threw an error: $err. '
           'The app may not function as expected until you remove this plugin from pubspec.yaml'
         );
         rethrow;

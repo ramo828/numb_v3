@@ -1,16 +1,13 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:routetest/backent/firebaseControl.dart';
 import 'package:routetest/database/db.dart';
 import 'package:routetest/database/model/user.dart';
+import 'package:routetest/elements/workElements.dart';
 import 'package:routetest/pages/homePage.dart';
-import 'package:routetest/pages/settingsPage.dart';
 import '../pages/aboutPage.dart';
-import '../pages/workPage.dart';
 import '../myWidgest/myWidgets.dart';
 
 class loginPage extends StatefulWidget {
@@ -20,6 +17,7 @@ class loginPage extends StatefulWidget {
   State<loginPage> createState() => _loginPageState();
 }
 
+firebaseControls firebaseControl = firebaseControls();
 userDB userP = userDB();
 myDataBase db = myDataBase();
 
@@ -190,22 +188,30 @@ class loginButton extends StatelessWidget {
       boxColor: Colors.blue.shade200.withOpacity(0.7),
       shadowColor: Colors.grey.shade600,
       onPress: (() async {
-        user.id = 0;
-        user.password = pass;
-        user.user = login;
-        firebaseControl firebase_control = firebaseControl();
-
-        if (await firebase_control.loginControl(login, pass)) {
-          db.clearDB();
-          db.insert(user);
-          Navigator.pushNamed(context, homePage.routeName);
-        } else {
-          db.insert(user);
-          showDialog(
-            context: context,
-            builder: (context) => const myAlertBox(),
-            useSafeArea: true,
+        try {
+          user.id = 0;
+          user.password = pass;
+          user.user = login;
+          if (await firebaseControl.loginControl(login, pass)) {
+            Navigator.pushNamed(context, homePage.routeName);
+          } else {
+            showDialog(
+              context: context,
+              builder: (context) => const myAlertBox(),
+              useSafeArea: true,
+            );
+          }
+        } catch (e) {
+          var xeta = ilanBar(
+            e.toString(),
+            "oldu",
+            1000000,
+            () {
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            },
           );
+
+          ScaffoldMessenger.of(context).showSnackBar(xeta);
         }
       }),
       child: const Center(
@@ -230,23 +236,6 @@ class myList extends StatelessWidget {
     return ListView(
       addAutomaticKeepAlives: true,
       children: [
-        OutlinedButton(
-          onPressed: () {
-            Navigator.pushNamed(context, Ayarlar.routeName);
-          },
-          child: ListTile(
-            leading: Icon(
-              color: iconColor,
-              Icons.app_registration_outlined,
-              size: 25,
-            ),
-            title: const Text(
-              textAlign: TextAlign.left,
-              "Ayarlar",
-              selectionColor: Colors.red,
-            ),
-          ),
-        ),
         OutlinedButton(
           onPressed: () {
             Navigator.pushNamed(context, Haqqinda.routeName);
@@ -281,23 +270,6 @@ class myList extends StatelessWidget {
             ),
           ),
         ),
-        OutlinedButton(
-          onPressed: () {
-            Navigator.pushNamed(context, Worker.routeName);
-          },
-          child: ListTile(
-            leading: Icon(
-              color: iconColor,
-              Icons.exit_to_app,
-              size: 25,
-            ),
-            title: const Text(
-              textAlign: TextAlign.left,
-              "Test",
-              selectionColor: Colors.red,
-            ),
-          ),
-        )
       ],
     );
   }

@@ -344,6 +344,18 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "url_launcher_android",
+      "rootUri": "file:///home/ramo828/.pub-cache/hosted/pub.dartlang.org/url_launcher_android-6.0.19",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
+      "name": "url_launcher_platform_interface",
+      "rootUri": "file:///home/ramo828/.pub-cache/hosted/pub.dartlang.org/url_launcher_platform_interface-2.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "vector_math",
       "rootUri": "file:///home/ramo828/.pub-cache/hosted/pub.dartlang.org/vector_math-2.1.2",
       "packageUri": "lib/",
@@ -368,7 +380,7 @@
       "languageVersion": "2.18"
     }
   ],
-  "generated": "2022-09-16T14:01:33.108944Z",
+  "generated": "2022-09-18T23:52:09.273693Z",
   "generator": "pub",
   "generatorVersion": "2.18.1"
 }

@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -15,7 +14,6 @@ import 'package:routetest/theme/themeData.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'elements/loginElements.dart';
-import 'firebase_options.dart';
 
 late myDataBase db;
 late Account a;
@@ -28,7 +26,7 @@ void main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
     ChangeNotifierProvider<themeWrite>(
-      child: YaziOrneyi(),
+      child: const YaziOrneyi(),
       create: (context) {
         return themeWrite();
       },
@@ -48,7 +46,7 @@ Future<bool> getNewUser() async {
 }
 
 class YaziOrneyi extends StatefulWidget {
-  YaziOrneyi({super.key});
+  const YaziOrneyi({super.key});
   @override
   State<YaziOrneyi> createState() => _YaziOrneyiState();
 }
@@ -162,19 +160,10 @@ class _YaziOrneyiState extends State<YaziOrneyi> {
                     size: 30,
                   ),
                 ),
-          onTap: () async {
-            FirebaseFirestore firestore = FirebaseFirestore.instance;
-            // CollectionReference test =
-            //     FirebaseFirestore.instance.collection('test');
-            // test.add({'ilkTest': '${counter}'});
-            var userData = firestore.collection('users');
-            var userRef = await userData.get();
-            List userList = userRef.docs;
-            print(userList[0].data());
+          onTap: () {
             setState(() {
               Provider.of<themeWrite>(context, listen: false).toggle();
             });
-            counter++;
           },
         ),
       ],
@@ -188,8 +177,6 @@ class _YaziOrneyiState extends State<YaziOrneyi> {
       ),
     );
   }
-
-  int counter = 0;
 }
 
 // ignore: camel_case_types

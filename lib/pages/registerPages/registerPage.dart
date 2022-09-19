@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:routetest/backent/firebaseControl.dart';
-import 'package:routetest/database/db.dart';
-import 'package:routetest/database/model/user.dart';
 
 import '../../elements/workElements.dart';
 
@@ -23,13 +21,8 @@ class _registerState extends State<register> {
 
   @override
   void initState() {
-    // TODO: implement initState
-    // try {
-    //   db = myDataBase();
-    //   db.open();
-    // } catch (e) {
-    //   print(e);
-    // }
+    _user = '';
+    _pass = '';
     super.initState();
   }
 
@@ -71,7 +64,19 @@ class _registerState extends State<register> {
                 ),
                 OutlinedButton(
                   onPressed: () {
-                    add(_user, _pass);
+                    try {
+                      add(_user, _pass);
+                    } catch (e) {
+                      var xeta = ilanBar(
+                        e.toString(),
+                        "oldu",
+                        1000000,
+                        () {
+                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                        },
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(xeta);
+                    }
                   },
                   child: const Text("Qeydiyyat"),
                 )
@@ -84,20 +89,7 @@ class _registerState extends State<register> {
   }
 
   void add(String login, String password) {
-    try {
-      firebaseControl fireControl = firebaseControl();
-      fireControl.createUser(login, password);
-    } catch (e) {
-      var data = ilanBar(e.toString(), "Oldu", 1000000, () {
-        ScaffoldMessenger.of(context).hideCurrentSnackBar();
-      });
-      ScaffoldMessenger.of(context).showSnackBar(data);
-    }
+    firebaseControls fireControl = firebaseControls();
+    fireControl.createUser(login, password);
   }
-  // List<Map<String, Object?>> user = await db.getItem(0);
-  // _user.id = 0;
-  // final netice = await db.insert(_user);
-  // print(user[0]['password']);
-  // print(user.length);
-  // print(netice);
 }

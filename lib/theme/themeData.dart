@@ -72,7 +72,7 @@ class themeWrite with ChangeNotifier {
 
   void themeInit() async {
     _darkDef = await getMode;
-    debugPrint("Dark : ${_darkDef}");
+    debugPrint("Dark : $_darkDef");
     notifyListeners();
   }
 
@@ -85,10 +85,11 @@ class themeWrite with ChangeNotifier {
   }
 
   ThemeData get theme {
-    if (_darkDef == true)
+    if (_darkDef == true) {
       return dark;
-    else
+    } else {
       return default1;
+    }
   }
 
   void saveData(bool value) async {
@@ -99,11 +100,12 @@ class themeWrite with ChangeNotifier {
 
   Future<bool> get getMode async {
     SharedPreferences sp = await SharedPreferences.getInstance();
-    bool value = await sp.getBool("dark") ?? true;
-    if (value != null)
+    bool value = sp.getBool("dark") ?? true;
+    if (value != null) {
       return value;
-    else
+    } else {
       return false;
+    }
   }
 
   bool get getThemeMode {

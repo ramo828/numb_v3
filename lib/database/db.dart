@@ -45,10 +45,11 @@ class myDataBase {
       where: "id = ?",
       whereArgs: [id],
     );
-    if (map != null)
+    if (map != null) {
       return map;
-    else
+    } else {
       throw ("getItem() funksiyasinda null data alindi");
+    }
   }
 
 // ID gore silmek ucun
