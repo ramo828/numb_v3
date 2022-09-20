@@ -1,12 +1,16 @@
-class Account {
-  String login1 = "Ramo828";
-  String pass1 = "ramiz123";
-  bool status = false;
-  final String login;
+class Accounts {
+  final String user;
   final String pass;
-  Account({required this.login, required this.pass});
+  final String name;
+  final String surname;
+  final String number;
+  final String referans;
 
-  void contrl() {
-    status = (login == login1 && pass == pass1);
-  }
+  Accounts(
+      {required this.user,
+      required this.pass,
+      required this.name,
+      required this.surname,
+      required this.number,
+      required this.referans});
 }

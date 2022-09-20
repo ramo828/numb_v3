@@ -398,6 +398,9 @@ SnackBar ilanBar(
       duration: Duration(microseconds: time),
       content: Text(
         text,
+        style: const TextStyle(
+          fontSize: 17,
+        ),
       ),
       action: SnackBarAction(
         textColor: Colors.amber,

@@ -2,9 +2,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:routetest/account/account.dart';
 import 'package:routetest/database/db.dart';
-import 'package:routetest/pages/registerPages/registerPage.dart';
+import 'package:routetest/pages/panel/usersPanel.dart';
+import 'package:routetest/pages/registerPage.dart';
 import 'package:routetest/pages/workNumberList.dart';
 import 'package:routetest/pages/aboutPage.dart';
 import 'package:routetest/pages/homePage.dart';
@@ -16,7 +16,6 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'elements/loginElements.dart';
 
 late myDataBase db;
-late Account a;
 ThemeData? theme;
 String userName = "";
 String userPass = "";
@@ -113,6 +112,10 @@ class _YaziOrneyiState extends State<YaziOrneyi> {
             case Ayarlar.routeName:
               return MaterialPageRoute(
                 builder: (context) => const Ayarlar(),
+              );
+            case usersPanel.routeName:
+              return MaterialPageRoute(
+                builder: (context) => const usersPanel(),
               );
           }
           return null;
@@ -240,7 +243,7 @@ class _loginTwoState extends State<loginTwo> {
             dotWidth: 15,
           ),
         ),
-        const SizedBox(height: 5),
+        const SizedBox(height: 4),
       ],
     );
   }

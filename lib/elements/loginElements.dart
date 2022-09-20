@@ -162,6 +162,9 @@ class _loginPageState extends State<loginPage> {
                 alignment: Alignment.topLeft,
                 child: Author(),
               ),
+              const SizedBox(
+                height: 10,
+              )
             ],
           ),
         ],
@@ -182,6 +185,27 @@ class loginButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> def = [
+      Center(
+        child: MyContainer(
+          shadowColor: Colors.blueGrey.shade900,
+          boxColor: Colors.blueGrey.shade500,
+          height: 60,
+          width: 120,
+          radius: 15,
+          mesafe: 15,
+          shadowRadius: 10,
+          child: const Center(
+            child: Text(
+              "Oldu",
+            ),
+          ),
+          onPress: () {
+            Navigator.pop(context);
+          },
+        ),
+      )
+    ];
     return MyContainer(
       height: 50,
       width: 170,
@@ -197,7 +221,9 @@ class loginButton extends StatelessWidget {
           } else {
             showDialog(
               context: context,
-              builder: (context) => const myAlertBox(),
+              builder: (context) => myAlertBox(
+                widgetList: def,
+              ),
               useSafeArea: true,
             );
           }
@@ -280,19 +306,21 @@ class myAlertBox extends StatelessWidget {
   final String title;
   // final Color backgroundColor;
   final Icon icon;
+  final List<Widget>? widgetList;
 
-  final String buttonText;
+  const myAlertBox({
+    super.key,
+    this.message = "İstifadəçi adı və ya şifrə xətalıdır!",
+    this.title = "",
+    this.icon = const Icon(
+      Icons.error,
+    ),
+    this.widgetList,
+  });
 
-  const myAlertBox(
-      {super.key,
-      this.message = "İstifadəçi adı və ya şifrə xətalıdır!",
-      this.title = "",
-      this.icon = const Icon(
-        Icons.error,
-        color: Colors.deepOrangeAccent,
-        size: 80,
-      ),
-      this.buttonText = "Oldu"});
+/*
+
+*/
 
   @override
   Widget build(BuildContext context) => AlertDialog(
@@ -311,27 +339,7 @@ class myAlertBox extends StatelessWidget {
           style: TextStyle(fontSize: 30, color: Colors.amber.shade600),
           textAlign: TextAlign.center,
         ),
-        actions: [
-          Center(
-            child: MyContainer(
-              shadowColor: Colors.blueGrey.shade900,
-              boxColor: Colors.blueGrey.shade500,
-              height: 60,
-              width: 120,
-              radius: 15,
-              mesafe: 15,
-              shadowRadius: 10,
-              child: Center(
-                child: Text(
-                  buttonText,
-                ),
-              ),
-              onPress: () {
-                Navigator.pop(context);
-              },
-            ),
-          )
-        ],
+        actions: widgetList,
       );
 }
 
