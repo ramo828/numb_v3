@@ -2,11 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:routetest/backent/firebaseControl.dart';
-import 'package:routetest/database/db.dart';
-import 'package:routetest/database/model/user.dart';
 import 'package:routetest/elements/workElements.dart';
 import 'package:routetest/pages/homePage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../pages/aboutPage.dart';
 import '../myWidgest/myWidgets.dart';
 
@@ -18,8 +18,6 @@ class loginPage extends StatefulWidget {
 }
 
 firebaseControls firebaseControl = firebaseControls();
-userDB userP = userDB();
-myDataBase db = myDataBase();
 
 class _loginPageState extends State<loginPage> {
   String login = "";
@@ -29,6 +27,8 @@ class _loginPageState extends State<loginPage> {
 
   @override
   Widget build(BuildContext context) {
+    Color defaultColor = Colors.blue.shade300.withOpacity(0.8);
+
     return Center(
       child: ListView(
         children: [
@@ -51,48 +51,18 @@ class _loginPageState extends State<loginPage> {
                 shadowColor: Colors.grey.shade600.withOpacity(0.1),
                 child: Column(
                   children: [
-                    MyContainer(
-                      shadowColor: Colors.grey.shade600,
-                      height: 60,
-                      width: 300,
-                      boxColor: Colors.blue.shade300.withOpacity(0.8),
-                      child: Center(
-                        child: TextField(
-                          textAlignVertical: TextAlignVertical.center,
-
-                          //login
-
-                          decoration: const InputDecoration(
-                            border: InputBorder.none,
-                            prefixIcon: Padding(
-                              padding: EdgeInsets.all(6.0),
-                              child: Icon(
-                                Icons.person,
-                                size: 40,
-                              ),
-                            ),
-                            prefix: Text(" "),
-                            hintText: 'Istifadəçi adı',
-                            hintStyle: TextStyle(
-                              fontSize: 25,
-                            ),
-                          ),
-                          style: const TextStyle(
-                            fontSize: 30,
-                            color: Colors.black54,
-                            decoration: TextDecoration.none,
-                            fontWeight: FontWeight.w900,
-                          ),
-
-                          textAlign: TextAlign.start,
-                          readOnly: false,
-                          onChanged: (value) {
-                            setState(() {
-                              login = value;
-                            });
-                          },
-                        ),
+                    field(
+                      'Istifadəçi adı',
+                      const Icon(
+                        Icons.person,
+                        size: 40,
                       ),
+                      (value) {
+                        login = value;
+                      },
+                      false,
+                      false,
+                      defaultColor,
                     ),
                     MyContainer(
                       shadowColor: Colors.grey.shade600,
@@ -213,15 +183,20 @@ class loginButton extends StatelessWidget {
       shadowColor: Colors.grey.shade600,
       onPress: (() async {
         try {
-          user.id = 0;
-          user.password = pass;
-          user.user = login;
           if (await firebaseControl.loginControl(login, pass)) {
+            SharedPreferences sp = await SharedPreferences.getInstance();
+
+            await sp.setBool("logIN", true);
+            await sp.setString("id", login);
             Navigator.pushNamed(context, homePage.routeName);
           } else {
             showDialog(
               context: context,
               builder: (context) => myAlertBox(
+                icon: const Icon(
+                  Icons.error,
+                  size: 50,
+                ),
                 widgetList: def,
               ),
               useSafeArea: true,
@@ -421,4 +396,57 @@ class _AuthorState extends State<Author> {
       },
     );
   }
+}
+
+var maskFormatter = MaskTextInputFormatter(
+    mask: '(###)-###-##-##',
+    filter: {"#": RegExp(r'[0-9]')},
+    type: MaskAutoCompletionType.lazy);
+
+MyContainer field(
+  String title,
+  Icon icon,
+  Function(
+    String value,
+  )
+      variable,
+  bool pass,
+  bool numbFormat,
+  Color color,
+) {
+  return MyContainer(
+    shadowColor: Colors.grey.shade600,
+    height: 60,
+    width: 300,
+    boxColor: color,
+    child: Center(
+      child: TextField(
+        inputFormatters: numbFormat
+            ? [
+                maskFormatter,
+              ]
+            : [],
+        textAlignVertical: TextAlignVertical.center,
+        obscureText: pass,
+        decoration: InputDecoration(
+          border: InputBorder.none,
+          prefixIcon: Padding(padding: const EdgeInsets.all(6.0), child: icon),
+          prefix: const Text(" "),
+          hintText: title,
+          hintStyle: const TextStyle(
+            fontSize: 25,
+          ),
+        ),
+        style: const TextStyle(
+          fontSize: 30,
+          color: Colors.black54,
+          decoration: TextDecoration.none,
+          fontWeight: FontWeight.w900,
+        ),
+        textAlign: TextAlign.start,
+        readOnly: false,
+        onChanged: variable,
+      ),
+    ),
+  );
 }

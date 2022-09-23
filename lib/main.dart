@@ -1,8 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:routetest/database/db.dart';
+import 'package:routetest/backent/firebaseControl.dart';
 import 'package:routetest/pages/panel/usersPanel.dart';
 import 'package:routetest/pages/registerPage.dart';
 import 'package:routetest/pages/workNumberList.dart';
@@ -15,11 +14,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'elements/loginElements.dart';
 
-late myDataBase db;
 ThemeData? theme;
-String userName = "";
-String userPass = "";
 bool themeStatus = true;
+bool routeStatus = false;
+
+firebaseControls firebaseControl = firebaseControls();
 
 void main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,9 +32,16 @@ void main(List<String> args) async {
   );
 }
 
+void settingData() async {
+  SharedPreferences sp = await SharedPreferences.getInstance();
+  List<String> setting = ['keyBakcell', 'keyNar', 'Metros', '/mnt/sdcard/'];
+  sp.setStringList('setting', setting);
+}
+
 void oldUser() async {
   SharedPreferences sp = await SharedPreferences.getInstance();
   sp.setBool('new', false);
+  settingData();
 }
 
 //Ilk defe programlari yekleyenler ucun
@@ -53,29 +59,25 @@ class YaziOrneyi extends StatefulWidget {
 class _YaziOrneyiState extends State<YaziOrneyi> {
   final Future<FirebaseApp> _firebase = Firebase.initializeApp();
 
-  void dbInit() {
-    try {
-      db = myDataBase();
-      db.open();
-    } catch (e) {
-      debugPrint(e.toString());
+  void init() async {
+    await getNewUser() ? oldUser() : debugPrint("Old user");
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    bool getStatus = await sp.getBool("logIN") ?? false;
+    //
+    if (getStatus) {
+      setState(() {
+        routeStatus = true;
+      });
+    } else {
+      routeStatus = false;
     }
-    debugPrint("Initilazed");
   }
-
-  // void init() async {
-  //   userName = await db.getUser('user');
-  //   userPass = await db.getUser('password');
-  //   await getNewUser() ? oldUser() : debugPrint("Old user");
-  // }
 
   @override
   void initState() {
     Provider.of<themeWrite>(context, listen: false).themeInit();
-
     super.initState();
-    dbInit();
-    // init();
+    init();
   }
 
   @override
@@ -130,9 +132,9 @@ class _YaziOrneyiState extends State<YaziOrneyi> {
               );
             } else if (snapshot.hasData) {
               return Scaffold(
-                drawer: const drawer(),
-                appBar: appBar(),
-                body: const loginTwo(),
+                // drawer: routeStatus ? Container() : drawer(),
+                // appBar: routeStatus ? appBar() : appBar(),
+                body: routeStatus ? homePage() : loginTwo(),
               );
             } else {
               return const Center(
@@ -142,65 +144,6 @@ class _YaziOrneyiState extends State<YaziOrneyi> {
           },
           future: _firebase,
         ));
-  }
-
-  AppBar appBar() {
-    return AppBar(
-      actions: [
-        GestureDetector(
-          child: !Provider.of<themeWrite>(context, listen: false).getThemeMode
-              ? const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Icon(
-                    FontAwesomeIcons.moon,
-                    size: 30,
-                  ),
-                )
-              : const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Icon(
-                    FontAwesomeIcons.sun,
-                    size: 30,
-                  ),
-                ),
-          onTap: () {
-            setState(() {
-              Provider.of<themeWrite>(context, listen: false).toggle();
-            });
-          },
-        ),
-      ],
-      centerTitle: true,
-      title: const Text(
-        "Numb v3",
-        style: TextStyle(
-          fontFamily: 'esasFont',
-          fontSize: 40,
-        ),
-      ),
-    );
-  }
-}
-
-// ignore: camel_case_types
-class drawer extends StatelessWidget {
-  const drawer({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Drawer(
-      elevation: 10,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(
-          Radius.circular(15),
-        ),
-      ),
-      semanticLabel: "Menyu",
-      width: 220,
-      child: myList(),
-    );
   }
 }
 

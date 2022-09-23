@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import "../backent/funtions.dart";
+import '../backent/functions.dart';
 
 List<String> data = [];
 

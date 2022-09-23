@@ -4,6 +4,7 @@ import 'package:routetest/account/account.dart';
 import 'package:routetest/backent/firebaseControl.dart';
 import 'package:routetest/elements/loginElements.dart';
 import 'package:routetest/myWidgest/myWidgets.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../elements/workElements.dart';
 
@@ -190,6 +191,7 @@ class _registerState extends State<register> {
                 ScaffoldMessenger.of(context).showSnackBar(xeta);
               }
               if (successStatus) {
+                // ignore: use_build_context_synchronously
                 ScaffoldMessenger.of(context).showSnackBar(success);
                 Navigator.pushNamed(context, '/');
               }
@@ -207,99 +209,50 @@ class _registerState extends State<register> {
     );
   }
 
-  MyContainer field(
-    String title,
-    Icon icon,
-    Function(
-      String value,
-    )
-        variable,
-    bool pass,
-    bool numbFormat,
-    Color color,
-  ) {
-    return MyContainer(
-      shadowColor: Colors.grey.shade600,
-      height: 60,
-      width: 300,
-      boxColor: color,
-      child: Center(
-        child: TextField(
-          inputFormatters: numbFormat
-              ? [
-                  maskFormatter,
-                ]
-              : [],
-          textAlignVertical: TextAlignVertical.center,
-          obscureText: pass,
-          decoration: InputDecoration(
-            border: InputBorder.none,
-            prefixIcon:
-                Padding(padding: const EdgeInsets.all(6.0), child: icon),
-            prefix: const Text(" "),
-            hintText: title,
-            hintStyle: const TextStyle(
-              fontSize: 25,
-            ),
-          ),
-          style: const TextStyle(
-            fontSize: 30,
-            color: Colors.black54,
-            decoration: TextDecoration.none,
-            fontWeight: FontWeight.w900,
-          ),
-          textAlign: TextAlign.start,
-          readOnly: false,
-          onChanged: variable,
-        ),
-      ),
-    );
-  }
-}
+  Future<bool> registerControl() async {
+    firebaseControls fireControl = firebaseControls();
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    if (_pass == _passTry) {
+      if (_pass.length < 8) {
+        throw Exception("Şifrə ən az 8 simvoldan ibarət olmalıdır!");
+      } else if (_user.length < 5) {
+        throw Exception("Login ən az 5 simvoldan ibarət olmalıdır!");
+      }
 
-Future<bool> registerControl() async {
-  if (_pass == _passTry) {
-    if (_pass.length < 8) {
-      throw Exception("Şifrə ən az 8 simvoldan ibarət olmalıdır!");
-    } else if (_user.length < 5) {
-      throw Exception("Login ən az 5 simvoldan ibarət olmalıdır!");
-    }
-
-    if (_user.isNotEmpty &&
-        _pass.isNotEmpty &&
-        _passTry.isNotEmpty &&
-        _name.isNotEmpty &&
-        _surname.isNotEmpty &&
-        _number.isNotEmpty &&
-        _referans.isNotEmpty) {
-      _account = Accounts(
-          user: _user,
-          pass: _pass,
-          name: _name,
-          surname: _surname,
-          number: _number,
-          referans: _referans);
-      await add(_account);
-      return true;
+      if (_user.isNotEmpty &&
+          _pass.isNotEmpty &&
+          _passTry.isNotEmpty &&
+          _name.isNotEmpty &&
+          _surname.isNotEmpty &&
+          _number.isNotEmpty &&
+          _referans.isNotEmpty) {
+        _account = Accounts(
+            user: _user,
+            pass: _pass,
+            name: _name,
+            surname: _surname,
+            number: _number,
+            referans: _referans);
+        if (!await fireControl.controlReferalAdress(_referans))
+          throw Exception("Referal adresi mövcud deyil");
+        await sp.setString('referal', _referans);
+        await add(_account);
+        return true;
+      } else {
+        throw Exception("Qeydiyyat xanaları boş buraxıla bilməz!");
+      }
     } else {
-      throw Exception("Qeydiyyat xanaları boş buraxıla bilməz!");
+      throw Exception("Şifrələr eyni deyil!");
     }
-  } else {
-    throw Exception("Şifrələr eyni deyil!");
+  }
+
+  Future<void> add(Accounts accounts) async {
+    firebaseControls fireControl = firebaseControls();
+    var data = await fireControl.existsUser(accounts.user) ?? true;
+    if (data) {
+      print("Error");
+    } else {
+      fireControl.createUser(accounts);
+    }
   }
 }
-
-Future<void> add(Accounts accounts) async {
-  firebaseControls fireControl = firebaseControls();
-  var data = await fireControl.existsUser(accounts.user);
-  if (data) {
-    print("Error");
-  } else {
-    fireControl.createUser(accounts);
-  }
-}
-
-var maskFormatter = MaskTextInputFormatter(
-    mask: '(###)-###-##-##',
-    filter: {"#": RegExp(r'[0-9]')},
-    type: MaskAutoCompletionType.lazy);
