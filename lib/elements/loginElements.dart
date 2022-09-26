@@ -181,27 +181,15 @@ class loginButton extends StatelessWidget {
       width: 170,
       boxColor: Colors.blue.shade200.withOpacity(0.7),
       shadowColor: Colors.grey.shade600,
+      onLongPress: () {},
       onPress: (() async {
         try {
           if (await firebaseControl.loginControl(login, pass)) {
             SharedPreferences sp = await SharedPreferences.getInstance();
-
             await sp.setBool("logIN", true);
             await sp.setString("id", login);
             Navigator.pushNamed(context, homePage.routeName);
-          } else {
-            showDialog(
-              context: context,
-              builder: (context) => myAlertBox(
-                icon: const Icon(
-                  Icons.error,
-                  size: 50,
-                ),
-                widgetList: def,
-              ),
-              useSafeArea: true,
-            );
-          }
+          } else {}
         } catch (e) {
           var xeta = ilanBar(
             e.toString(),

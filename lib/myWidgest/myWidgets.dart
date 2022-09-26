@@ -11,28 +11,32 @@ class MyContainer extends StatelessWidget {
   final double shadowRadius;
   final double width;
   final double height;
-
   final void Function()? onPress;
+  final void Function()? onLongPress;
+
   // ignore: use_key_in_widget_constructors
-  const MyContainer(
-      {this.radius = 15.0,
-      this.mesafe = 15.0,
-      this.width = 0,
-      this.height = 0,
-      this.shadowColor = Colors.white,
-      this.boxColor = Colors.white,
-      this.spreadRadius = 5,
-      this.shadowRadius = 15,
-      this.child = const Icon(
-        Icons.add,
-        size: 100,
-        color: Colors.black54,
-      ),
-      this.onPress});
+  const MyContainer({
+    this.radius = 15.0,
+    this.mesafe = 15.0,
+    this.width = 0,
+    this.height = 0,
+    this.shadowColor = Colors.white,
+    this.boxColor = Colors.white,
+    this.spreadRadius = 5,
+    this.shadowRadius = 15,
+    this.child = const Icon(
+      Icons.add,
+      size: 100,
+      color: Colors.black54,
+    ),
+    this.onPress,
+    this.onLongPress,
+  });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onLongPress: onLongPress,
       onTap: onPress,
       child: Container(
         // width: MediaQuery.of(context).size.width * 0.5 - 200,

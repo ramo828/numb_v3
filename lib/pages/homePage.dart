@@ -1,10 +1,8 @@
-import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:routetest/account/group.dart';
 import 'package:routetest/backent/firebaseControl.dart';
 import 'package:routetest/myWidgest/myWidgets.dart';
 import 'package:routetest/pages/aboutPage.dart';
@@ -17,23 +15,27 @@ import 'package:shared_preferences/shared_preferences.dart';
 // ignore: depend_on_referenced_packages
 import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';
 
-String name = '';
-String surname = '';
-late group _group;
-groupID _gid = groupID();
-FirebaseFirestore firebase = FirebaseFirestore.instance;
+String _name = '';
+String _surname = '';
+String _groupName = '';
+int _groupLevel = 0;
+bool _groupStatus = false;
+int _groupID = 0;
+
+FirebaseFirestore _firebase = FirebaseFirestore.instance;
 firebaseControls fc = firebaseControls();
-var update = firebase.collection('update').doc('update');
-var users = firebase.collection('users'); // Firebase collection
-int referalID = 0;
-String id = "";
+var update = _firebase.collection('update').doc('update');
+var users = _firebase.collection('users'); // Firebase collection
 
 class homePage extends StatefulWidget {
   static const String routeName = "/homePage";
-  final String? mesaj;
-  const homePage({super.key, this.mesaj});
+
+  const homePage({
+    super.key,
+  });
 
   @override
+  // ignore: no_logic_in_create_state
   State<homePage> createState() {
     return _homePageState();
   }
@@ -41,35 +43,14 @@ class homePage extends StatefulWidget {
 
 globalElements ge = globalElements();
 
-Future<void> getData() async {
-  SharedPreferences sp = await SharedPreferences.getInstance();
-  id = sp.getString("id") ?? ' ';
-  name = await fc.getUserData(id, 'name') ?? 'bos';
-  surname = await fc.getUserData(id, 'surname') ?? 'bos';
-}
-
-Stream<QuerySnapshot<Map<String, dynamic>>>? userDataForID;
-
-void refData() async {
-  SharedPreferences sp = await SharedPreferences.getInstance();
-  referalID = await fc.getReferalID(sp.getString("referal")!) ?? 1;
-}
-
 class _homePageState extends State<homePage> {
   @override
   void initState() {
-    _gid = groupID(idGroup: referalID);
-
-    getData();
-    refData();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    print("_gid3");
-    print(_gid.idGroup);
-    // var test = fc.getData(, keyMap)
     var textStyle = const TextStyle(
       color: Colors.orange,
       fontSize: 30,
@@ -82,90 +63,124 @@ class _homePageState extends State<homePage> {
         ),
       ),
       drawer: const myDrawer(),
-      body: Column(
-        children: [],
+      body: const homeScreenBegin(),
+    );
+  }
+}
+
+class homeScreenBegin extends StatefulWidget {
+  const homeScreenBegin({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  State<homeScreenBegin> createState() => _homeScreenBeginState();
+}
+
+class _homeScreenBeginState extends State<homeScreenBegin> {
+  void userData() {
+    fc.userData(
+      (value) {
+        setState(() {
+          var allData = value.data();
+          if (allData != null) {
+            _name = allData['name'];
+            _surname = allData['surname'];
+          }
+        });
+      },
+    );
+  }
+
+  void groupData() {
+    fc.groupData((value) {
+      setState(() {
+        _groupName = value.data()['groupName'];
+        _groupStatus = value.data()['status'] ?? false;
+        _groupLevel = value.data()['level'];
+        _groupID = value.data()['id'];
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    userData();
+    groupData();
+    return ListView(
+      children: [
+        const updateController(),
+        Center(
+          child: _groupStatus ? const active() : const passive(),
+        )
+      ],
+    );
+  }
+}
+
+class passive extends StatelessWidget {
+  const passive({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return const Text("Status aktiv deyil");
+  }
+}
+
+class active extends StatelessWidget {
+  const active({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    String groupLevel = _groupLevel == 0
+        ? "İcazəniz yoxdur"
+        : _groupLevel == 1
+            ? "Sadə"
+            : _groupLevel == 2
+                ? "Xüsusi"
+                : _groupLevel == 3
+                    ? "VİP"
+                    : "Developer";
+    String groupStatus = _groupStatus ? "Aktiv" : "Passiv";
+    return MyContainer(
+      height: 100,
+      width: 400,
+      shadowColor: Colors.black,
+      boxColor: Colors.grey.shade700.withOpacity(0.8),
+      child: Wrap(
+        children: [
+          Center(
+            child: Text(
+              "Group: $_groupName\nİcazə: $groupLevel\nStatus: $groupStatus",
+              style: TextStyle(fontSize: 28, color: Colors.blueGrey.shade100),
+            ),
+          ),
+          MyContainer(
+            boxColor: Colors.grey.shade700,
+            shadowColor: Colors.black,
+            height: 300,
+            width: 400,
+            child: Wrap(
+              spacing: 2,
+              alignment: WrapAlignment.center,
+              direction: Axis.vertical,
+              children: const [],
+            ),
+          )
+        ],
       ),
     );
   }
 }
 
-TextStyle textGroup = TextStyle(
+TextStyle textGroup = const TextStyle(
   fontSize: 20,
   color: Colors.blueAccent,
 );
-
-class passiveStatus extends StatelessWidget {
-  const passiveStatus({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        MyContainer(
-          boxColor: Colors.grey.shade300,
-          height: 100,
-          width: 400,
-          child: Center(
-            child: Text(
-              "Status aktiv deyil",
-              style: textGroup,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class activeStatus extends StatelessWidget {
-  const activeStatus({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    String paket = "Paket adı: ";
-
-    return Column(
-      children: [
-        const updateController(),
-        MyContainer(
-          height: 100,
-          width: 400,
-          boxColor: Colors.grey.shade300,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Grupunuz: ${_group.groupName}",
-                  style: textGroup,
-                ),
-                Text(
-                  _group.level == 1
-                      ? "$paket Sadə"
-                      : _group.level == 2
-                          ? "$paket Xüsusi"
-                          : _group.level == 1
-                              ? "$paket VIP"
-                              : "$paket Qeyri aktiv",
-                  style: textGroup,
-                ),
-                Text(
-                  _group.status ? "Hesab: Aktiv" : "Hesab: Passiv",
-                  style: textGroup,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
 
 class updateController extends StatelessWidget {
   const updateController({
@@ -327,18 +342,28 @@ class _myDrawerState extends State<myDrawer> {
             MyContainer(
               boxColor: Colors.grey.shade800.withOpacity(0.1),
               shadowColor: Colors.grey,
-              height: 70,
+              height: 77,
               width: 0,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      "Ad: $name\nSoyad: $surname",
-                      style:
-                          TextStyle(fontSize: 17, color: Colors.blue.shade200),
-                    ),
+                  Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: CircleAvatar(
+                            backgroundColor: Colors.deepPurple.withOpacity(0.3),
+                            child: const Icon(Icons.person_outline_sharp)),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          "$_name\n$_surname\n($_groupName)",
+                          style: TextStyle(
+                              fontSize: 17, color: Colors.blue.shade200),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -396,10 +421,10 @@ class _myDrawerState extends State<myDrawer> {
               ),
             ),
             GestureDetector(
-              onTap: () async {
-                SharedPreferences sp = await SharedPreferences.getInstance();
-                await sp.setBool('logIN', false);
-                exit(1);
+              onTap: () {
+                logOut();
+                Navigator.pushNamed(context, "/");
+                // exit(1);
               },
               child: const ListTile(
                 leading: Icon(
@@ -464,9 +489,4 @@ Future<void> _launchInBrowser(String url) async {
   )) {
     throw 'Could not launch $url';
   }
-}
-
-class groupID {
-  final idGroup;
-  groupID({this.idGroup});
 }

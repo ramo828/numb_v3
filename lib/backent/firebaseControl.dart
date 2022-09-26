@@ -1,33 +1,39 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/widgets.dart';
 import 'package:routetest/account/account.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class firebaseControls {
   FirebaseFirestore firebase = FirebaseFirestore.instance;
 
+  loginEqulizer() {}
+
   Future<bool> loginControl(String login, String password) async {
     SharedPreferences sp = await SharedPreferences.getInstance();
-    String? getReferal = sp.getString("referal");
-    if (getReferal == null) throw Exception("Referal doğru deyil");
     late bool status;
     try {
-      var userDoc =
-          firebase.collection("users").doc(getReferal).collection('groupUsers');
-      var userData = await userDoc.get();
-      var userLength = userData.docs.length;
-      for (int i = 0; i < userLength; i++) {
-        var userList = userData.docs[i].data();
-        if (userList["user"] == login && userList["password"] == password) {
-          status = true;
-          break;
-        } else {
-          status = false;
+      var referalList = await firebase.collection("users").get();
+      var referalLength = referalList.docs.length;
+      for (int j = 0; j < referalLength; j++) {
+        print(referalList.docs[j]["referalName"]);
+        var userDoc = firebase
+            .collection("users")
+            .doc(referalList.docs[j]["referalName"])
+            .collection('groupUsers');
+        var userData = await userDoc.get();
+        var userLength = userData.docs.length;
+        for (int i = 0; i < userLength; i++) {
+          var userList = userData.docs[i].data();
+          if (userList["user"] == login && userList["password"] == password) {
+            sp.setString("referal", referalList.docs[j]["referalName"]);
+            status = true;
+            break;
+          } else {}
         }
       }
       return status;
     } catch (e) {
-      throw ("Login və ya şifrə boş buraxıla bilməaz!");
+      print(e);
+      throw ("Login və ya şifrə yanlışdır!");
     }
   }
 
@@ -83,13 +89,6 @@ class firebaseControls {
     });
   }
 
-  void setData() {
-    Map<String, dynamic> data = {'name': 'Ramiz Mammadli2'};
-    var myRef = firebase.collection("users"); //test collection icinden
-    myRef.doc('raufagayev').update(data); //test documentini tap
-    //ve mapdaki keye gore datani deyisdir
-  }
-
   Future<int> regLimit() async {
     SharedPreferences sp = await SharedPreferences.getInstance();
     String? getReferal = sp.getString("referal");
@@ -108,22 +107,29 @@ class firebaseControls {
     //ve mapdaki keye gore datani deyisdir
   }
 
-  Future<dynamic> getUserData(String user, String key) async {
+  void userData(Function(dynamic value) fn) async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    String? getReferal = sp.getString("referal");
+    String? login = sp.getString("id");
+
+    if (getReferal == null && login == null) {
+      throw Exception("Referal doğru deyil");
+    }
+    firebase
+        .collection("users")
+        .doc(getReferal)
+        .collection("groupUsers")
+        .doc(login)
+        .get()
+        .then(fn);
+  }
+
+  void groupData(Function(dynamic value) fn) async {
     SharedPreferences sp = await SharedPreferences.getInstance();
     String? getReferal = sp.getString("referal");
 
     if (getReferal == null) throw Exception("Referal doğru deyil");
-    try {
-      var userColl = firebase
-          .collection("users")
-          .doc(getReferal)
-          .collection("groupUsers")
-          .doc(user);
-      var userData = await userColl.get();
-      return userData[key];
-    } on StateError catch (e) {
-      debugPrint("Istifadeci tapilmadi");
-    }
+    firebase.collection("users").doc(getReferal).get().then(fn);
   }
 
   Future<bool> controlReferalAdress(String referal) async {
@@ -134,28 +140,6 @@ class firebaseControls {
       return false;
     } else {
       return true;
-    }
-  }
-
-  Future<int> getReferalID(String referal) async {
-    var referalStatus = firebase.collection("users").doc(referal);
-    var ref = await referalStatus.get();
-    var rfData = ref.data();
-    if (rfData == null) {
-      return -1;
-    } else {
-      return rfData['id'];
-    }
-  }
-
-  Future<dynamic> getData(String referal, String keyMap) async {
-    var referalStatus = firebase.collection("users").doc(referal);
-    var ref = await referalStatus.get();
-    var rfData = ref.data();
-    if (rfData == null) {
-      return -1;
-    } else {
-      return rfData['id'];
     }
   }
 }

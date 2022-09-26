@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:routetest/account/account.dart';
 import 'package:routetest/backent/firebaseControl.dart';
 import 'package:routetest/elements/loginElements.dart';
@@ -233,8 +232,9 @@ class _registerState extends State<register> {
             surname: _surname,
             number: _number,
             referans: _referans);
-        if (!await fireControl.controlReferalAdress(_referans))
+        if (!await fireControl.controlReferalAdress(_referans)) {
           throw Exception("Referal adresi mövcud deyil");
+        }
         await sp.setString('referal', _referans);
         await add(_account);
         return true;

@@ -62,7 +62,7 @@ class _YaziOrneyiState extends State<YaziOrneyi> {
   void init() async {
     await getNewUser() ? oldUser() : debugPrint("Old user");
     SharedPreferences sp = await SharedPreferences.getInstance();
-    bool getStatus = await sp.getBool("logIN") ?? false;
+    bool getStatus = sp.getBool("logIN") ?? false;
     //
     if (getStatus) {
       setState(() {
@@ -132,9 +132,7 @@ class _YaziOrneyiState extends State<YaziOrneyi> {
               );
             } else if (snapshot.hasData) {
               return Scaffold(
-                // drawer: routeStatus ? Container() : drawer(),
-                // appBar: routeStatus ? appBar() : appBar(),
-                body: routeStatus ? homePage() : loginTwo(),
+                body: routeStatus ? const homePage() : const loginTwo(),
               );
             } else {
               return const Center(
