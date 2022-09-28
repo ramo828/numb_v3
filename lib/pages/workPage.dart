@@ -4,11 +4,13 @@ import 'package:routetest/pages/workNumberList.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../elements/workElements.dart';
 
+bool isLoading = false;
+bool isLoadingData = false;
+
 class Worker extends StatefulWidget {
   static const String routeName = "/worker";
 
   const Worker({super.key});
-
   @override
   State<Worker> createState() => _WorkerState();
 }
@@ -23,6 +25,32 @@ class _WorkerState extends State<Worker> {
       appBar: AppBar(
         centerTitle: true,
         title: Text(pageName[index]),
+        actions: [
+          index == 1
+              ? IconButton(
+                  onPressed: () async {
+                    setState(() {
+                      isLoading = true;
+                    });
+                    isLoadingData = !await const numberList().writeNumber();
+
+                    setState(() {
+                      isLoading = isLoadingData;
+                    });
+                  },
+                  icon: const Icon(
+                    Icons.list_alt,
+                  ),
+                )
+              : Container(),
+          isLoading
+              ? const Center(
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                  ),
+                )
+              : Container(),
+        ],
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -34,8 +62,8 @@ class _WorkerState extends State<Worker> {
                 value == 0 ? index = 0 : index = 1;
               }),
               children: const [
-                numberTextField(),
-                numberList(),
+                numberTextField(), // nomre daxil etme hissesi
+                numberList(), //siyahi halinda olan nomreler
               ],
             ),
           ),

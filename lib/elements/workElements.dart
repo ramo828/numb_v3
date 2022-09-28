@@ -154,7 +154,9 @@ class _numberTextFieldState extends State<numberTextField> {
                           //listedeki kohne datalari sil
                           const numberList().clearData();
                           //yeni datalari elave et
-                          const numberList().addNumber(network.numberList);
+                          const numberList().setNumberList(network.numberList);
+                          // datalari liste elave et
+                          const numberList().addNumber();
 
                           setState(() {
                             loading = false;

@@ -7,18 +7,18 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:707937081157:android:4e4abb1aaae3a5e03f502c",
+        "mobilesdk_app_id": "1:707937081157:android:e9437c007cbeb2873f502c",
         "android_client_info": {
-          "package_name": "com.example.routetest"
+          "package_name": "com.ramosoft.numbv3"
         }
       },
       "oauth_client": [
         {
-          "client_id": "707937081157-hjqjqin885bvdi21klei9d98evpas3a1.apps.googleusercontent.com",
+          "client_id": "707937081157-puppii368jsqe2b37v62qtesv7t65jjl.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.routetest",
-            "certificate_hash": "64fcb0150d236b47432811971d3eb7995f5141e5"
+            "package_name": "com.ramosoft.numbv3",
+            "certificate_hash": "e9e87b3a044922968e05b33631c12fe9b69474dc"
           }
         },
         {

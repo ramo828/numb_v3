@@ -1,24 +1,52 @@
 import 'package:flutter/material.dart';
+import 'package:routetest/backent/io/fileProvider.dart';
 import '../backent/functions.dart';
 
 List<String> data = [];
+String numberData = "";
+List<String> numbers = [];
+fileProvider fp = fileProvider();
+bool isDown = false;
 
 // ignore: camel_case_types
 class numberList extends StatefulWidget {
+  static const routeName = "/list";
+
   //Listedeki datalari temizle
   void clearData() {
     data.clear();
   }
 
-  addNumber(List<String> numbers) {
+  void setNumberList(List<String> num) {
+    numbers = num;
+  }
+
+//Nomreleri liste elave et
+  addNumber() async {
     for (int i = 0; i < numbers.length; i++) {
-      data.add(func().splitNumberData(numbers[i]));
+      data.add(func()
+          .splitNumberData(numbers[i])); //elave etmemisden once ayir xxx-xx-xx
     }
   }
 
-  const numberList({super.key});
+  Future<bool> writeNumber() async {
+    isDown = false;
+    // ignore: unnecessary_null_comparison
+    if (numbers != null) {
+      for (int i = 0; i < numbers.length; i++) {
+        numberData += "${numbers[i]}\n";
+      }
+      await fp.fileWrite(numberData, "numbers.txt");
+    } else {
+      debugPrint("Bos data");
+      return isDown;
+    }
+    isDown = true;
+    debugPrint("Yuklendi");
+    return isDown;
+  }
 
-  static const routeName = "/list";
+  const numberList({super.key});
 
   @override
   State<numberList> createState() => _numberListState();
