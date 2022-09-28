@@ -7,6 +7,8 @@ String numberData = "";
 List<String> numbers = [];
 fileProvider fp = fileProvider();
 bool isDown = false;
+String vcfData = "";
+int counterAllData = 0;
 
 // ignore: camel_case_types
 class numberList extends StatefulWidget {
@@ -15,27 +17,58 @@ class numberList extends StatefulWidget {
   //Listedeki datalari temizle
   void clearData() {
     data.clear();
+    numberData = "";
+    vcfData = "";
+    counterAllData = 0;
   }
 
   void setNumberList(List<String> num) {
-    numbers = num;
+    numbers = num; //listi numbers deyiscenine elave et
   }
 
 //Nomreleri liste elave et
   addNumber() async {
-    for (int i = 0; i < numbers.length; i++) {
+    for (var element in numbers) {
       data.add(func()
-          .splitNumberData(numbers[i])); //elave etmemisden once ayir xxx-xx-xx
+          .splitNumberData(element)); //elave etmemisden once ayir xxx-xx-xx
     }
   }
 
-  Future<bool> writeNumber() async {
+  String getMaxLengthVCF() {
+    return counterAllData.toString();
+  }
+
+  Future<bool> writeVCF() async {
+    List<String> testList = ["055", "077", "050"];
+    isDown = false;
+    if (numbers != null) {
+      for (int count = 0; count < numbers.length; count++) {
+        for (int prefixIndex = 0;
+            prefixIndex < testList.length;
+            prefixIndex++) {
+          vcfData += func().vcf(
+              "Metros", testList, prefixIndex, numbers[count], counterAllData);
+          counterAllData++;
+        }
+      }
+      await fp.fileWrite(vcfData, "numbers.vcf");
+    } else {
+      isDown = false;
+    }
+    isDown = true;
+    return isDown;
+  }
+
+  Future<bool> writeTXT() async {
     isDown = false;
     // ignore: unnecessary_null_comparison
+
     if (numbers != null) {
-      for (int i = 0; i < numbers.length; i++) {
-        numberData += "${numbers[i]}\n";
+      for (var element in numbers) {
+        numberData += "$element\n";
       }
+      print("yuklendi");
+
       await fp.fileWrite(numberData, "numbers.txt");
     } else {
       debugPrint("Bos data");
