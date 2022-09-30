@@ -32,6 +32,8 @@ class _numberTextFieldState extends State<numberTextField> {
 
   @override
   Widget build(BuildContext context) {
+    bool pane1 = true;
+    bool pane2 = false;
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Scaffold(
@@ -117,17 +119,16 @@ class _numberTextFieldState extends State<numberTextField> {
                       child: Center(child: category()),
                     ),
                     divider,
-                    MyContainer(
-                      shadowColor: Colors.blueGrey,
-                      boxColor: Colors.blueGrey.shade200,
-                      height: 60,
-                      width: 250,
-                      child: Center(
-                        child: outputFileType(),
-                      ),
-                    ),
-                    divider,
-
+                    //
+                    operatorPrefix((index, isExpanded) {
+                      setState(() {
+                        if (index == 0) {
+                          isExpanded ? pane1 = false : pane1 = true;
+                        } else if (index == 1) {
+                          isExpanded ? pane2 = false : pane2 = true;
+                        }
+                      });
+                    }),
                     MyContainer(
                       shadowColor: Colors.blueGrey,
                       boxColor: Colors.blue.shade200,
@@ -345,50 +346,12 @@ class _numberTextFieldState extends State<numberTextField> {
       },
     );
   }
-
-  DropdownButton outputFileType<String>() {
-    List<DropdownMenuItem<dynamic>>? fileType = [
-      menuItem("Text", "Text", true),
-      menuItem("VCF", "VCF", true),
-      menuItem("CSV", "CSV", true),
-      menuItem("Google CSV", "Google CSV", true),
-    ];
-    return DropdownButton(
-      isExpanded: true,
-      borderRadius: const BorderRadius.all(
-        Radius.circular(15.0),
-      ),
-      disabledHint: Center(
-        child: Text(
-          "Aktiv deyil",
-          style: style,
-        ),
-      ),
-      iconSize: 40,
-      focusColor: Colors.blue,
-      iconEnabledColor: Colors.green.shade300,
-      iconDisabledColor: Colors.red.shade300,
-      dropdownColor: Colors.grey.shade300,
-      hint: Center(
-        child: Text(
-          outputFileValue!,
-          style: style,
-        ),
-      ),
-      items: fileType,
-      onChanged: (value) {
-        setState(() {
-          outputFileValue = value;
-        });
-      },
-    );
-  }
-
-  var maskFormatter = MaskTextInputFormatter(
-      mask: '###-##-##',
-      filter: {"#": RegExp(r'[0-9xX]')},
-      type: MaskAutoCompletionType.lazy);
 }
+
+var maskFormatter = MaskTextInputFormatter(
+    mask: '###-##-##',
+    filter: {"#": RegExp(r'[0-9xX]')},
+    type: MaskAutoCompletionType.lazy);
 
 SnackBar ilanBar(
   String text,
@@ -410,3 +373,27 @@ SnackBar ilanBar(
         onPressed: onPress,
       ),
     );
+
+ExpansionPanelList operatorPrefix(
+    void Function(int index, bool isExpanded) callback) {
+  return ExpansionPanelList(
+    animationDuration: const Duration(milliseconds: 600),
+    expansionCallback: callback,
+    children: [
+      ExpansionPanel(
+        canTapOnHeader: true,
+        headerBuilder: (BuildContext context, bool isExpanded) {
+          return const Center(
+            child: ListTile(
+              title: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text('Aktiv nömrələri tap'),
+              ),
+            ),
+          );
+        },
+        body: Column(),
+      ),
+    ],
+  );
+}

@@ -32,8 +32,11 @@ class Network {
         );
         var response = await http.get(
           getBakcell(number, categoryKey, counter),
-          headers: header(token),
+          headers: await header(),
         );
+        if (response.statusCode == 500) {
+          throw Exception("Key xətası");
+        }
         if (response.statusCode == 200) {
           var data = loadData(response.body);
           List msis = data[0]['freeMsisdnList'];

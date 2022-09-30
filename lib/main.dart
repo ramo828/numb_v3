@@ -9,6 +9,7 @@ import 'package:routetest/pages/aboutPage.dart';
 import 'package:routetest/pages/homePage.dart';
 import 'package:routetest/pages/workPage.dart';
 import 'package:routetest/pages/settingsPage.dart';
+import 'package:routetest/pages/workSettings.dart';
 import 'package:routetest/theme/themeData.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -34,7 +35,12 @@ void main(List<String> args) async {
 
 void settingData() async {
   SharedPreferences sp = await SharedPreferences.getInstance();
-  List<String> setting = ['keyBakcell', 'keyNar', 'Metros', '/mnt/sdcard/'];
+  List<String> setting = [
+    'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJNQUlOIiwiZXhwIjoxNjY2MTAzOTE2fQ.PsIDajJ5xIQz82PwDEZq28opZDpk_hCT-nUBsBtbr-GOYLq1XcoLmXMYEZYcuDBlxoiSJClB2BTAEUqmoLfvSQ',
+    'keyNar',
+    'Metros',
+    '/sdcard/work/'
+  ];
   sp.setStringList('setting', setting);
 }
 
@@ -119,18 +125,22 @@ class _YaziOrneyiState extends State<YaziOrneyi> {
               return MaterialPageRoute(
                 builder: (context) => const usersPanel(),
               );
+            case workSettings.routeName:
+              return MaterialPageRoute(
+                builder: (context) => const workSettings(),
+              );
           }
           return null;
         },
         home: FutureBuilder(
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
+          builder: (context, AsyncSnapshot ash) {
+            if (ash.hasError) {
               return const Center(
                 child: Text(
                   "Problem yarandi",
                 ),
               );
-            } else if (snapshot.hasData) {
+            } else if (ash.hasData) {
               return Scaffold(
                 body: routeStatus ? const homePage() : const loginTwo(),
               );

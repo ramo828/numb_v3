@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:routetest/backent/io/fileProvider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../backent/functions.dart';
 
 List<String> data = [];
@@ -41,13 +42,16 @@ class numberList extends StatefulWidget {
   Future<bool> writeVCF() async {
     List<String> testList = ["055", "077", "050"];
     isDown = false;
-    if (numbers != null) {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    var contactName = sp.getStringList("setting")![2];
+
+    if (numbers != null || contactName != null) {
       for (int count = 0; count < numbers.length; count++) {
         for (int prefixIndex = 0;
             prefixIndex < testList.length;
             prefixIndex++) {
-          vcfData += func().vcf(
-              "Metros", testList, prefixIndex, numbers[count], counterAllData);
+          vcfData += func().vcf(contactName, testList, prefixIndex,
+              numbers[count], counterAllData);
           counterAllData++;
         }
       }

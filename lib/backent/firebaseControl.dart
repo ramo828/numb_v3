@@ -100,13 +100,19 @@ class firebaseControls {
     return userLength;
   }
 
+// bearer keyi guncellemek ucun
   void setBearerKey(String operatorKey, String bearerKey) async {
-    Map<String, dynamic> data = {operatorKey.toLowerCase(): bearerKey};
+    var now = DateTime.now();
+    Map<String, dynamic> data = {
+      operatorKey.toLowerCase(): bearerKey,
+      operatorKey == "nar" ? 'narTime' : 'bakcellTime': now
+    };
     var myRef = firebase.collection("globalKey"); //test collection icinden
     await myRef.doc('key').update(data); //test documentini tap
     //ve mapdaki keye gore datani deyisdir
   }
 
+//isstifadeci bilgilerini almaq ucun
   void userData(Function(dynamic value) fn) async {
     SharedPreferences sp = await SharedPreferences.getInstance();
     String? getReferal = sp.getString("referal");
@@ -124,6 +130,7 @@ class firebaseControls {
         .then(fn);
   }
 
+//group bilgilerini almaq ucun
   void groupData(Function(dynamic value) fn) async {
     SharedPreferences sp = await SharedPreferences.getInstance();
     String? getReferal = sp.getString("referal");
@@ -132,6 +139,12 @@ class firebaseControls {
     firebase.collection("users").doc(getReferal).get().then(fn);
   }
 
+// Guncel key varsa onu guncellemek ucun
+  void groupsKeyData(Function(dynamic value) fn) async {
+    firebase.collection("globalKey").doc('key').get().then(fn);
+  }
+
+//referal adresinin movcudlugunu yoxlamaq ucun
   Future<bool> controlReferalAdress(String referal) async {
     var referalStatus = firebase.collection("users").doc(referal);
     var ref = await referalStatus.get();

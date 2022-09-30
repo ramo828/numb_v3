@@ -1,11 +1,13 @@
 import 'dart:io';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 class fileProvider {
 //
 
   Future makeFile(String file) async {
-    // var faylYolu = await getExternalPath;
-    var faylYolu = "/sdcard/work/";
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    var faylYolu = sp.getStringList("setting")![3];
     return File(faylYolu + file);
   }
 

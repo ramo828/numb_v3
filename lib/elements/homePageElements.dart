@@ -7,7 +7,6 @@ import 'package:routetest/myWidgest/myWidgets.dart';
 import 'package:routetest/pages/aboutPage.dart';
 import 'package:routetest/pages/homePage.dart';
 import 'package:routetest/pages/settingsPage.dart';
-import 'package:routetest/pages/workPage.dart';
 import 'package:routetest/theme/themeData.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 // ignore: depend_on_referenced_packages
@@ -187,32 +186,6 @@ class _myDrawerState extends State<myDrawer> {
                 ],
               ),
             ),
-            GestureDetector(
-              onTap: () => Navigator.pushNamed(context, Worker.routeName),
-              child: const ListTile(
-                leading: Icon(
-                  Icons.list,
-                  size: 25,
-                ),
-                title: Text(
-                  textAlign: TextAlign.left,
-                  "Siyahı Hazırla",
-                ),
-              ),
-            ),
-            // GestureDetector(
-            //   onTap: () => Navigator.pushNamed(context, usersPanel.routeName),
-            //   child: const ListTile(
-            //     leading: Icon(
-            //       Icons.person_add,
-            //       size: 25,
-            //     ),
-            //     title: Text(
-            //       textAlign: TextAlign.left,
-            //       "İstifadəçi paneli",
-            //     ),
-            //   ),
-            // ),
             GestureDetector(
               onTap: () => Navigator.pushNamed(context, Haqqinda.routeName),
               child: const ListTile(

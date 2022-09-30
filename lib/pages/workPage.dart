@@ -1,13 +1,25 @@
 // ignore: file_names
 import 'package:flutter/material.dart';
 import 'package:routetest/pages/workNumberList.dart';
-import 'package:routetest/theme/themeData.dart';
+import 'package:routetest/pages/workSettings.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../elements/workElements.dart';
 
 bool isLoading = false;
 bool testType = false;
 List<String> popMenu = ["Text", "VCF", "CSV", "Google CSV"];
+
+//ayar bilgileri ayar acilan kimi yuklensin
+Future<List<String>?> initSettingData() async {
+  try {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    settings = sp.getStringList("setting") as List<String>;
+  } catch (e) {
+    print(e);
+  }
+  return settings;
+}
 
 class Worker extends StatefulWidget {
   static const String routeName = "/worker";
@@ -18,6 +30,13 @@ class Worker extends StatefulWidget {
 }
 
 class _WorkerState extends State<Worker> {
+  @override
+  void initState() {
+    initSettingData();
+    // TODO: implement initState
+    super.initState();
+  }
+
   PageController controller = PageController();
   List<String> pageName = ["Axtarış", "Nömrələr"];
   int index = 0;
@@ -28,33 +47,36 @@ class _WorkerState extends State<Worker> {
         centerTitle: true,
         title: Text(pageName[index]),
         actions: [
-          // index == 1
-          //     ? IconButton(
-          //         onPressed: () async {
-          //
-          //         icon: const Icon(
-          //           Icons.list_alt,
-          //         ),
-          //       )
-          //     : Container(),
-          // isLoading
-          //     ? const Padding(
-          //         padding: EdgeInsets.all(8.0),
-          //         child: Center(
-          //           child: CircularProgressIndicator(
-          //             strokeWidth: 2,
-          //           ),
-          //         ),
-          //       )
-          //     : Container(),
+          index == 0
+              ? IconButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, workSettings.routeName);
+                  },
+                  icon: const Icon(
+                    Icons.settings,
+                  ),
+                )
+              : Container(),
+          index == 1
+              ? isLoading
+                  ? const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                        ),
+                      ),
+                    )
+                  : Container()
+              : Container(),
           index == 1
               ? PopupMenuButton(
                   onSelected: ((value) {
                     exportData(value);
                   }),
-                  icon: Icon(Icons.list),
+                  icon: const Icon(Icons.list),
                   itemBuilder: (context) {
-                    return List.generate(3, (index) {
+                    return List.generate(popMenu.length, (index) {
                       return PopupMenuItem(
                         value: index,
                         child: Text(popMenu[index]),
@@ -152,6 +174,7 @@ class _WorkerState extends State<Worker> {
 
   void CSV() {}
   void googleCSV() {}
+
   void exportData(int index) async {
     switch (index) {
       case 0:

@@ -1,11 +1,18 @@
 import 'dart:convert';
 
+import 'package:flutter/widgets.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 List<dynamic> loadData(String jsonData) => json.decode(jsonData).toList();
 
 String token =
     "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJNQUlOIiwiZXhwIjoxNjY2MTAzOTE2fQ.PsIDajJ5xIQz82PwDEZq28opZDpk_hCT-nUBsBtbr-GOYLq1XcoLmXMYEZYcuDBlxoiSJClB2BTAEUqmoLfvSQ";
 
-Map<String, String> header(String key) {
+Future<Map<String, String>> header() async {
+  SharedPreferences sp = await SharedPreferences.getInstance();
+  List<String>? setting = sp.getStringList("setting") ?? [];
+  String key = setting[0];
+  debugPrint(key);
   return {
     'Content-Type': 'application/json',
     'Accept': 'application/json, text/plain, */*',
