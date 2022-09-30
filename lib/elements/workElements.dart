@@ -150,14 +150,29 @@ class _numberTextFieldState extends State<numberTextField> {
                               number: numberValue!,
                               categoryKey: categoryValue!,
                               page: 0,
+                              prefixKey: prefixValue!,
                               context: context);
-                          await network.connect();
-                          //listedeki kohne datalari sil
-                          const numberList().clearData();
-                          //yeni datalari elave et
-                          const numberList().setNumberList(network.numberList);
-                          // datalari liste elave et
-                          const numberList().addNumber();
+                          if (operatorValue == 'Bakcell') {
+                            debugPrint("Bakcell selected");
+                            await network.connect();
+                            //listedeki kohne datalari sil
+                            const numberList().clearData();
+                            //yeni datalari elave et
+                            const numberList()
+                                .setNumberList(network.numberList);
+                            // datalari liste elave et
+                            const numberList().addNumber();
+                          } else if (operatorValue == 'Nar') {
+                            await network.connectNar();
+                            //listedeki kohne datalari sil
+                            const numberList().clearData();
+                            //yeni datalari elave et
+                            const numberList()
+                                .setNumberList(network.numberList);
+                            const numberList().addNumber();
+
+                            // datalari liste elave et
+                          }
 
                           setState(() {
                             loading = false;
@@ -237,13 +252,21 @@ class _numberTextFieldState extends State<numberTextField> {
       ),
       items: [
         menuItem("Bakcell", "Bakcell", true),
-        menuItem("Nar", "Nar", false),
+        menuItem("Nar", "Nar", true),
       ],
       onChanged: (value) {
         setState(() {
+          print("SECILDI");
           operatorValue = value;
-          value == "Bakcell" ? prefixValue = "055" : prefixValue = "070";
-          value == "Bakcell" ? prefixValue == "055" : categoryValue == "Sadə";
+
+          value == "Bakcell"
+              ? categoryValue = "Sadə"
+              : value == "Bakcell"
+                  ? categoryValue = "Sadə099"
+                  : categoryValue = "GENERAL";
+
+          value == "Nar" ? prefixValue = "070" : prefixValue == "055";
+          value == "Bakcell" ? prefixValue = "055" : prefixValue == "070";
         });
       },
     );
@@ -287,7 +310,7 @@ class _numberTextFieldState extends State<numberTextField> {
               ? categoryValue = "Sadə"
               : value == "099"
                   ? categoryValue = "Sadə099"
-                  : categoryValue = "General";
+                  : categoryValue = "GENERAL";
         });
       },
     );
@@ -308,7 +331,16 @@ class _numberTextFieldState extends State<numberTextField> {
     ];
     List<DropdownMenuItem<dynamic>>? nar = [
       menuItem("GENERAL", "GENERAL", true),
-      menuItem("Prestige", "Prestige", true),
+      menuItem("Prestige", "PRESTİGE", true),
+      menuItem("Prestige1", "PRESTİGE1", true),
+      menuItem("Prestige2", "PRESTİGE2", true),
+      menuItem("Prestige3", "PRESTİGE3", true),
+      menuItem("Prestige4", "PRESTİGE4", true),
+      menuItem("Prestige5", "PRESTİGE5", true),
+      menuItem("Prestige6", "PRESTİGE6", true),
+      menuItem("Prestige7", "PRESTİGE7", true),
+      menuItem("Prestige7", "PRESTİGE8", true),
+      menuItem("Hamısı", "", true),
     ];
 
     return DropdownButton(

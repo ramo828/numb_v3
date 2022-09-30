@@ -1,18 +1,20 @@
 import 'dart:convert';
 
-import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 List<dynamic> loadData(String jsonData) => json.decode(jsonData).toList();
 
-String token =
-    "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJNQUlOIiwiZXhwIjoxNjY2MTAzOTE2fQ.PsIDajJ5xIQz82PwDEZq28opZDpk_hCT-nUBsBtbr-GOYLq1XcoLmXMYEZYcuDBlxoiSJClB2BTAEUqmoLfvSQ";
-
-Future<Map<String, String>> header() async {
+Future<Map<String, String>> header(int choise) async {
+  String key = "";
   SharedPreferences sp = await SharedPreferences.getInstance();
   List<String>? setting = sp.getStringList("setting") ?? [];
-  String key = setting[0];
-  debugPrint(key);
+  if (choise == 0) {
+    key = setting[0];
+    // debugPrint(key);
+  } else {
+    key = setting[1];
+    // debugPrint(key);
+  }
   return {
     'Content-Type': 'application/json',
     'Accept': 'application/json, text/plain, */*',
@@ -30,6 +32,37 @@ Uri getBakcell(String number, String categoryKey, int page) {
       "showReserved": "true",
       "size": "2000",
       "page": "$page",
+    },
+  );
+}
+
+// bunu duzelt
+Uri getNar(String number, String prestigeKey, String prefixKey, int page) {
+  List<String> num = [
+    number[0] == 'x' ? '' : number[0],
+    number[1] == 'x' ? '' : number[1],
+    number[2] == 'x' ? '' : number[2],
+    number[3] == 'x' ? '' : number[3],
+    number[4] == 'x' ? '' : number[4],
+    number[5] == 'x' ? '' : number[5],
+    number[6] == 'x' ? '' : number[6]
+  ];
+  return Uri.https(
+    "public-api.azerconnect.az",
+    "/msazfposapptrans/api/msisdn-search",
+    {
+      "prefix": prefixKey,
+      "msisdn": number,
+      "size": "2000",
+      "page": "$page",
+      "prestigeLevel": prestigeKey,
+      "a1": num[0],
+      "a2": num[1],
+      "a3": num[2],
+      "a4": num[3],
+      "a5": num[4],
+      "a6": num[5],
+      "a7": num[6],
     },
   );
 }

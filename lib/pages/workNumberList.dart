@@ -29,9 +29,11 @@ class numberList extends StatefulWidget {
 
 //Nomreleri liste elave et
   addNumber() async {
+    print(numbers);
     for (var element in numbers) {
       data.add(func()
           .splitNumberData(element)); //elave etmemisden once ayir xxx-xx-xx
+
     }
   }
 
