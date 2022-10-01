@@ -20,6 +20,11 @@ TextStyle textGroup = const TextStyle(
   color: Colors.blueAccent,
 );
 
+var textInfo = TextStyle(
+  fontSize: 20,
+  color: Colors.amber.withOpacity(0.9),
+);
+
 class updateNotifier extends StatelessWidget {
   const updateNotifier({
     Key? key,
@@ -188,27 +193,30 @@ class _myDrawerState extends State<myDrawer> {
             ),
             GestureDetector(
               onTap: () => Navigator.pushNamed(context, Haqqinda.routeName),
-              child: const ListTile(
-                leading: Icon(
+              child: ListTile(
+                style: ListTileStyle.drawer,
+                leading: const Icon(
                   Icons.info,
                   size: 25,
                 ),
                 title: Text(
                   textAlign: TextAlign.left,
                   "Haqqında",
+                  style: textInfo,
                 ),
               ),
             ),
             GestureDetector(
               onTap: () => Navigator.pushNamed(context, Ayarlar.routeName),
-              child: const ListTile(
-                leading: Icon(
+              child: ListTile(
+                leading: const Icon(
                   Icons.settings,
                   size: 25,
                 ),
                 title: Text(
                   textAlign: TextAlign.left,
                   "Ayarlar",
+                  style: textInfo,
                 ),
               ),
             ),
@@ -218,14 +226,15 @@ class _myDrawerState extends State<myDrawer> {
                 Navigator.pushNamed(context, "/");
                 // exit(1);
               },
-              child: const ListTile(
-                leading: Icon(
+              child: ListTile(
+                leading: const Icon(
                   Icons.exit_to_app,
                   size: 25,
                 ),
                 title: Text(
                   textAlign: TextAlign.left,
                   "Çıxış",
+                  style: textInfo,
                 ),
               ),
             ),

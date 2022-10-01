@@ -92,9 +92,7 @@ class Network {
           getNar(number, categoryKey, prefixKey.substring(1, 3), counter),
           headers: await header(1),
         );
-        if (response.statusCode == 403 && response.statusCode == 500) {
-          throw Exception("Key xətası");
-        }
+
         if (response.statusCode == 200) {
           List msis = loadData(response.body);
           if (msis.isEmpty) break;
@@ -104,6 +102,8 @@ class Network {
           if (counter > 0) ScaffoldMessenger.of(context).showSnackBar(pageInfo);
 
           counter++;
+        } else {
+          throw Exception("Key xətası ${response.statusCode}");
         }
       }
       // ignore: empty_catches

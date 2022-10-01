@@ -10,10 +10,25 @@ fileProvider fp = fileProvider();
 bool isDown = false;
 String vcfData = "";
 int counterAllData = 0;
+//VCF hazirlanacaq prefixler
+List<String> prefixList = [
+  "055",
+  "099",
+  "050",
+  "051",
+  "010",
+  "070",
+  "077",
+];
 
 // ignore: camel_case_types
 class numberList extends StatefulWidget {
   static const routeName = "/list";
+
+  void setPrefix(List<String> prefixLst) {
+    prefixList.clear();
+    prefixList = prefixLst;
+  }
 
   //Listedeki datalari temizle
   void clearData() {
@@ -29,7 +44,6 @@ class numberList extends StatefulWidget {
 
 //Nomreleri liste elave et
   addNumber() async {
-    print(numbers);
     for (var element in numbers) {
       data.add(func()
           .splitNumberData(element)); //elave etmemisden once ayir xxx-xx-xx
@@ -42,7 +56,6 @@ class numberList extends StatefulWidget {
   }
 
   Future<bool> writeVCF() async {
-    List<String> testList = ["055", "077", "050"];
     isDown = false;
     SharedPreferences sp = await SharedPreferences.getInstance();
     var contactName = sp.getStringList("setting")![2];
@@ -50,9 +63,9 @@ class numberList extends StatefulWidget {
     if (numbers != null || contactName != null) {
       for (int count = 0; count < numbers.length; count++) {
         for (int prefixIndex = 0;
-            prefixIndex < testList.length;
+            prefixIndex < prefixList.length;
             prefixIndex++) {
-          vcfData += func().vcf(contactName, testList, prefixIndex,
+          vcfData += func().vcf(contactName, prefixList, prefixIndex,
               numbers[count], counterAllData);
           counterAllData++;
         }

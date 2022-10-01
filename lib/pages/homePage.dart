@@ -2,6 +2,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:routetest/backent/firebaseControl.dart';
 import 'package:routetest/backent/io/fileProvider.dart';
@@ -14,11 +15,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 String _groupName = '';
 int _groupLevel = 0;
 bool _groupStatus = false;
+// ignore: unused_element
 int _groupID = 0;
 String _narKey = "";
 String _bakcellKey = "";
-String _narTime = "";
-String _bakcellTime = "";
 FirebaseFirestore _firebase = FirebaseFirestore.instance;
 firebaseControls fc = firebaseControls();
 fileProvider fp = fileProvider();
@@ -137,6 +137,7 @@ class _activeState extends State<active> {
   bool pane1 = false;
   bool pane2 = false;
   bool pane3 = false;
+
   var startButtonStyle = TextStyle(
     fontSize: 30,
     color: Colors.blueGrey.withOpacity(0.9),
@@ -158,96 +159,135 @@ class _activeState extends State<active> {
         MyContainer(
           height: 110,
           width: 400,
-          shadowColor: Colors.black,
-          boxColor: Colors.grey.shade700.withOpacity(0.8),
+          shadowColor: Colors.blueGrey,
+          boxColor: Colors.blueGrey.shade200,
           child: Wrap(
             children: [
               Center(
                 child: Text(
                   "Group: $_groupName\nİcazə: $groupLevel\nStatus: $groupStatus",
-                  style:
-                      TextStyle(fontSize: 28, color: Colors.blueGrey.shade100),
+                  style: const TextStyle(fontSize: 28, color: Colors.blueGrey),
                 ),
               ),
             ],
           ),
         ),
         _groupStatus
-            ? ExpansionPanelList(
-                animationDuration: const Duration(milliseconds: 600),
-                expansionCallback: (int index, bool isExpanded) {
-                  setState(() {
-                    if (index == 0) {
-                      isExpanded ? pane1 = false : pane1 = true;
-                    } else if (index == 1) {
-                      isExpanded ? pane2 = false : pane2 = true;
-                    }
-                  });
-                },
-                children: [
-                  ExpansionPanel(
-                    canTapOnHeader: true,
-                    headerBuilder: (BuildContext context, bool isExpanded) {
-                      return const Center(
-                        child: ListTile(
-                          title: Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text('Siyahı hazırla'),
+            ? SizedBox(
+                width: 350,
+                child: ExpansionPanelList(
+                  animationDuration: const Duration(milliseconds: 600),
+                  expansionCallback: (int index, bool isExpanded) {
+                    setState(() {
+                      if (index == 0) {
+                        isExpanded ? pane1 = false : pane1 = true;
+                      } else if (index == 1) {
+                        isExpanded ? pane2 = false : pane2 = true;
+                      }
+                    });
+                  },
+                  children: [
+                    ExpansionPanel(
+                      backgroundColor: Colors.blueGrey.shade200,
+                      canTapOnHeader: true,
+                      headerBuilder: (BuildContext context, bool isExpanded) {
+                        return Center(
+                          child: ListTile(
+                            leading: const Icon(FontAwesomeIcons.pen),
+                            title: Padding(
+                              padding: const EdgeInsets.only(left: 40),
+                              child: Text(
+                                'Siyahı hazırla',
+                                style: textInfo,
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                      body: ListTile(
+                        subtitle: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Text(
+                              """Bu özəlliklə sistemda satışda olan nömrələri TXT,VCF, CSV və google CSV olaraq cihaz yaddaşına qeyd edə bilər.""",
+                              style: textInfo,
+                            ),
                           ),
                         ),
-                      );
-                    },
-                    body: ListTile(
-                      subtitle: const Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Text(
-                            "Bu özəlliklə sistemda satışda olan nömrələri TXT, VCF, CSV və google CSV olaraq cihaz yaddaşına qeyd edə bilər."),
-                      ),
-                      title: Center(
-                        child: GestureDetector(
-                          onTap: (() =>
-                              Navigator.pushNamed(context, Worker.routeName)),
-                          child: Text(
-                            "Başla",
-                            style: startButtonStyle,
+                        title: Center(
+                          child: GestureDetector(
+                            onTap: (() =>
+                                Navigator.pushNamed(context, Worker.routeName)),
+                            child: MyContainer(
+                              boxColor: Colors.blue.shade200,
+                              shadowColor: Colors.blue,
+                              height: 50,
+                              width: 100,
+                              child: Center(
+                                child: Text(
+                                  "Başla",
+                                  style: startButtonStyle,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                       ),
+                      isExpanded: pane1,
                     ),
-                    isExpanded: pane1,
-                  ),
-                  ExpansionPanel(
-                    canTapOnHeader: true,
-                    headerBuilder: (BuildContext context, bool isExpanded) {
-                      return const Center(
-                        child: ListTile(
-                          title: Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text('Aktiv nömrələri tap'),
+                    ExpansionPanel(
+                      backgroundColor: Colors.blueGrey.shade200,
+                      canTapOnHeader: true,
+                      headerBuilder: (BuildContext context, bool isExpanded) {
+                        return Center(
+                          child: ListTile(
+                            leading: const Icon(Icons.whatsapp),
+                            title: Padding(
+                              padding: const EdgeInsets.only(left: 40),
+                              child: Text(
+                                'Aktiv nömrələri tap',
+                                style: textInfo,
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                      body: ListTile(
+                        subtitle: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              """Bu özəlliklə sistemda aktiv şəkildə istifadə olunan nömrələri TXT,VCF, CSV və google CSV olaraq cihaz yaddaşına qeyd edə bilər.
+                                """,
+                              style: textInfo,
+                            ),
                           ),
                         ),
-                      );
-                    },
-                    body: ListTile(
-                      subtitle: const Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Text(
-                            "Bu özəlliklə sistemda aktiv şəkildə istifadə olunan nömrələri TXT, VCF, CSV və google CSV olaraq cihaz yaddaşına qeyd edə bilər."),
-                      ),
-                      title: Center(
-                        child: GestureDetector(
-                          onTap: (() =>
-                              Navigator.pushNamed(context, Worker.routeName)),
-                          child: Text(
-                            "Başla",
-                            style: startButtonStyle,
+                        title: Center(
+                          child: GestureDetector(
+                            onTap: (() =>
+                                Navigator.pushNamed(context, Worker.routeName)),
+                            child: MyContainer(
+                              boxColor: Colors.blue.shade200,
+                              shadowColor: Colors.blue,
+                              height: 50,
+                              width: 100,
+                              child: Center(
+                                child: Text(
+                                  "Başla",
+                                  style: startButtonStyle,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                       ),
+                      isExpanded: pane2,
                     ),
-                    isExpanded: pane2,
-                  ),
-                ],
+                  ],
+                ),
               )
             : Container(),
       ],

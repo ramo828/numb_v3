@@ -14,6 +14,16 @@ class numberTextField extends StatefulWidget {
   State<numberTextField> createState() => _numberTextFieldState();
 }
 
+bool prefixStatus = false;
+bool op050 = false;
+bool op051 = false;
+bool op010 = false;
+bool op070 = false;
+bool op077 = false;
+bool op099 = false;
+bool op055 = false;
+List<String> referancePrefixList = [];
+
 class _numberTextFieldState extends State<numberTextField> {
   String? prefixValue = "055";
   String? operatorValue = "Bakcell";
@@ -32,8 +42,6 @@ class _numberTextFieldState extends State<numberTextField> {
 
   @override
   Widget build(BuildContext context) {
-    bool pane1 = true;
-    bool pane2 = false;
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Scaffold(
@@ -123,12 +131,139 @@ class _numberTextFieldState extends State<numberTextField> {
                     operatorPrefix((index, isExpanded) {
                       setState(() {
                         if (index == 0) {
-                          isExpanded ? pane1 = false : pane1 = true;
-                        } else if (index == 1) {
-                          isExpanded ? pane2 = false : pane2 = true;
+                          isExpanded
+                              ? prefixStatus = false
+                              : prefixStatus = true;
                         }
                       });
-                    }),
+                    }, [
+                      Container(
+                        color: Colors.grey.shade500,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Column(
+                              children: [
+                                operatorCheck(
+                                  value: op050,
+                                  label: "050",
+                                  onChanged: (value) {
+                                    if (value!) {
+                                      referancePrefixList.add("050");
+                                    } else {
+                                      referancePrefixList.remove("050");
+                                    }
+                                    setState(() {
+                                      op050 == true
+                                          ? op050 = false
+                                          : op050 = true;
+                                    });
+                                  },
+                                ),
+                                operatorCheck(
+                                  label: "051",
+                                  value: op051,
+                                  onChanged: (value) {
+                                    if (value!) {
+                                      referancePrefixList.add("051");
+                                    } else {
+                                      referancePrefixList.remove("051");
+                                    }
+                                    setState(() {
+                                      op051 == true
+                                          ? op051 = false
+                                          : op051 = true;
+                                    });
+                                  },
+                                ),
+                                operatorCheck(
+                                  value: op010,
+                                  label: "010",
+                                  onChanged: (value) {
+                                    if (value!) {
+                                      referancePrefixList.add("010");
+                                    } else {
+                                      referancePrefixList.remove("010");
+                                    }
+                                    setState(() {
+                                      op010 == true
+                                          ? op010 = false
+                                          : op010 = true;
+                                    });
+                                  },
+                                ),
+                                operatorCheck(
+                                  value: op055,
+                                  label: "055",
+                                  onChanged: (value) {
+                                    if (value!) {
+                                      referancePrefixList.add("055");
+                                    } else {
+                                      referancePrefixList.remove("055");
+                                    }
+                                    setState(() {
+                                      op055 == true
+                                          ? op055 = false
+                                          : op055 = true;
+                                    });
+                                  },
+                                ),
+                              ],
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 45),
+                              child: Column(
+                                children: [
+                                  operatorCheck(
+                                    value: op099,
+                                    label: "099",
+                                    onChanged: (value) {
+                                      setState(() {
+                                        op099 == true
+                                            ? op099 = false
+                                            : op099 = true;
+                                      });
+                                    },
+                                  ),
+                                  operatorCheck(
+                                    label: "070",
+                                    value: op070,
+                                    onChanged: (value) {
+                                      if (value!) {
+                                        referancePrefixList.add("070");
+                                      } else {
+                                        referancePrefixList.remove("070");
+                                      }
+                                      setState(() {
+                                        op070 == true
+                                            ? op070 = false
+                                            : op070 = true;
+                                      });
+                                    },
+                                  ),
+                                  operatorCheck(
+                                    value: op077,
+                                    label: "077",
+                                    onChanged: (value) {
+                                      if (value!) {
+                                        referancePrefixList.add("077");
+                                      } else {
+                                        referancePrefixList.remove("077");
+                                      }
+                                      setState(() {
+                                        op077 == true
+                                            ? op077 = false
+                                            : op077 = true;
+                                      });
+                                    },
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      )
+                    ]),
                     MyContainer(
                       shadowColor: Colors.blueGrey,
                       boxColor: Colors.blue.shade200,
@@ -141,6 +276,41 @@ class _numberTextFieldState extends State<numberTextField> {
                         ),
                       ),
                       onPress: () async {
+                        if (op050) {
+                          referancePrefixList.add("050");
+                        } else {
+                          referancePrefixList.remove("050");
+                        }
+                        if (op051) {
+                          referancePrefixList.add("051");
+                        } else {
+                          referancePrefixList.remove("051");
+                        }
+                        if (op010) {
+                          referancePrefixList.add("010");
+                        } else {
+                          referancePrefixList.remove("010");
+                        }
+                        if (op055) {
+                          referancePrefixList.add("055");
+                        } else {
+                          referancePrefixList.remove("055");
+                        }
+                        if (op099) {
+                          referancePrefixList.add("099");
+                        } else {
+                          referancePrefixList.remove("099");
+                        }
+                        if (op070) {
+                          referancePrefixList.add("070");
+                        } else {
+                          referancePrefixList.remove("070");
+                        }
+                        if (op077) {
+                          referancePrefixList.add("077");
+                        } else {
+                          referancePrefixList.remove("077");
+                        }
                         //  yoxla
                         try {
                           setState(() {
@@ -154,6 +324,7 @@ class _numberTextFieldState extends State<numberTextField> {
                               context: context);
                           if (operatorValue == 'Bakcell') {
                             debugPrint("Bakcell selected");
+                            const numberList().setPrefix(referancePrefixList);
                             await network.connect();
                             //listedeki kohne datalari sil
                             const numberList().clearData();
@@ -163,6 +334,8 @@ class _numberTextFieldState extends State<numberTextField> {
                             // datalari liste elave et
                             const numberList().addNumber();
                           } else if (operatorValue == 'Nar') {
+                            debugPrint("Nar selected");
+                            const numberList().setPrefix(referancePrefixList);
                             await network.connectNar();
                             //listedeki kohne datalari sil
                             const numberList().clearData();
@@ -406,26 +579,77 @@ SnackBar ilanBar(
       ),
     );
 
-ExpansionPanelList operatorPrefix(
-    void Function(int index, bool isExpanded) callback) {
-  return ExpansionPanelList(
-    animationDuration: const Duration(milliseconds: 600),
-    expansionCallback: callback,
-    children: [
-      ExpansionPanel(
-        canTapOnHeader: true,
-        headerBuilder: (BuildContext context, bool isExpanded) {
-          return const Center(
-            child: ListTile(
-              title: Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text('Aktiv nömrələri tap'),
+Widget operatorPrefix(
+    void Function(int index, bool isExpanded) callback, List<Widget> widgets) {
+  return Container(
+    // height: 200,
+    width: 255,
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(10),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.grey.withOpacity(0.5),
+          spreadRadius: 15,
+          blurRadius: 15,
+          offset: const Offset(0, 3), // changes position of shadow
+        ),
+      ],
+    ),
+    child: ExpansionPanelList(
+      dividerColor: Colors.black,
+      animationDuration: const Duration(milliseconds: 600),
+      expansionCallback: callback,
+      children: [
+        ExpansionPanel(
+          backgroundColor: Colors.blueGrey.shade200,
+          isExpanded: prefixStatus,
+          canTapOnHeader: true,
+          headerBuilder: (BuildContext context, bool isExpanded) {
+            return const Center(
+              child: ListTile(
+                title: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Center(
+                    child: Text(
+                      'PREFIX',
+                    ),
+                  ),
+                ),
               ),
-            ),
-          );
-        },
-        body: Column(),
-      ),
-    ],
+            );
+          },
+          body: Column(
+            children: widgets,
+          ),
+        ),
+      ],
+    ),
   );
+}
+
+class operatorCheck extends StatelessWidget {
+  final bool value;
+  final void Function(bool? value)? onChanged;
+  final String label;
+  const operatorCheck({required this.value, this.onChanged, required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 30,
+            color: Colors.black26,
+          ),
+        ),
+        Checkbox(
+          value: value,
+          onChanged: onChanged,
+        ),
+      ],
+    );
+  }
 }
