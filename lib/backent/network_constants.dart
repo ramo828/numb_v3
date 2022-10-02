@@ -67,6 +67,13 @@ Uri getNar(String number, String prestigeKey, String prefixKey, int page) {
   );
 }
 
+Uri getActiveNar(String number) {
+  return Uri.https(
+    "public-api.azerconnect.az",
+    "/msazfposappds/api/dealer/recharge-log/details/$number",
+  );
+}
+
 String getCategory(String keyData) {
   Map<String, String> category = {
     "Sadə": "1429263300716842758",

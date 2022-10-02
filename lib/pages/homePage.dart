@@ -9,6 +9,7 @@ import 'package:routetest/backent/io/fileProvider.dart';
 import 'package:routetest/elements/homePageElements.dart';
 import 'package:routetest/myWidgest/myWidgets.dart';
 import 'package:routetest/elements/globalElements.dart';
+import 'package:routetest/pages/activeNumbers/activePage.dart';
 import 'package:routetest/pages/workPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -265,8 +266,8 @@ class _activeState extends State<active> {
                         ),
                         title: Center(
                           child: GestureDetector(
-                            onTap: (() =>
-                                Navigator.pushNamed(context, Worker.routeName)),
+                            onTap: (() => Navigator.pushNamed(
+                                context, activePage.routeName)),
                             child: MyContainer(
                               boxColor: Colors.blue.shade200,
                               shadowColor: Colors.blue,

@@ -2,6 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:routetest/backent/firebaseControl.dart';
+import 'package:routetest/pages/activeNumbers/activeNetwork.dart';
+import 'package:routetest/pages/activeNumbers/activePage.dart';
 import 'package:routetest/pages/panel/usersPanel.dart';
 import 'package:routetest/pages/registerPage.dart';
 import 'package:routetest/pages/workNumberList.dart';
@@ -128,6 +130,10 @@ class _YaziOrneyiState extends State<YaziOrneyi> {
             case workSettings.routeName:
               return MaterialPageRoute(
                 builder: (context) => const workSettings(),
+              );
+            case activePage.routeName:
+              return MaterialPageRoute(
+                builder: (context) => const activePage(),
               );
           }
           return null;
