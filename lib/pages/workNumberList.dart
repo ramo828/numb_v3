@@ -26,8 +26,9 @@ class numberList extends StatefulWidget {
   static const routeName = "/list";
 
   void setPrefix(List<String> prefixLst) {
-    prefixList.clear();
+    print("Ilk: $prefixLst");
     prefixList = prefixLst;
+    print("Son: $prefixList");
   }
 
   //Listedeki datalari temizle
@@ -75,6 +76,7 @@ class numberList extends StatefulWidget {
       isDown = false;
     }
     isDown = true;
+    prefixList.clear();
     return isDown;
   }
 

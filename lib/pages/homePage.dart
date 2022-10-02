@@ -105,8 +105,6 @@ class _homeScreenBeginState extends State<homeScreenBegin> {
     referansSetting.insert(2, settingData![2]);
     referansSetting.insert(3, settingData[3]);
     sp.setStringList("setting", referansSetting);
-
-    print(referansSetting);
   }
 
   @override

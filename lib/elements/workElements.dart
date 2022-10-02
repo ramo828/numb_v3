@@ -69,13 +69,16 @@ class _numberTextFieldState extends State<numberTextField> {
                         : Container(),
 
                     //operator
-                    MyContainer(
-                      shadowColor: Colors.blueGrey,
-                      boxColor: Colors.blueGrey.shade200,
-                      mesafe: 10,
-                      height: 60,
-                      width: 200,
-                      child: Center(child: operators()),
+                    SizedBox(
+                      width: 330,
+                      child: MyContainer(
+                        shadowColor: Colors.blueGrey,
+                        boxColor: Colors.blueGrey.shade200,
+                        mesafe: 10,
+                        height: 60,
+                        width: 200,
+                        child: Center(child: operators()),
+                      ),
                     ),
                     divider,
 
@@ -85,7 +88,7 @@ class _numberTextFieldState extends State<numberTextField> {
                       boxColor: Colors.blueGrey.shade200,
                       mesafe: 10,
                       height: 70,
-                      width: 350,
+                      width: 330,
                       child: Center(
                         child: Padding(
                           padding: const EdgeInsets.all(3.0),
@@ -119,151 +122,157 @@ class _numberTextFieldState extends State<numberTextField> {
                     divider,
 
                     //Category
-                    MyContainer(
-                      shadowColor: Colors.blueGrey,
-                      boxColor: Colors.blueGrey.shade200,
-                      height: 60,
-                      width: 250,
-                      child: Center(child: category()),
+                    SizedBox(
+                      width: 350,
+                      child: MyContainer(
+                        shadowColor: Colors.blueGrey,
+                        boxColor: Colors.blueGrey.shade200,
+                        height: 60,
+                        width: 250,
+                        child: Center(child: category()),
+                      ),
                     ),
                     divider,
                     //
-                    operatorPrefix((index, isExpanded) {
-                      setState(() {
-                        if (index == 0) {
-                          isExpanded
-                              ? prefixStatus = false
-                              : prefixStatus = true;
-                        }
-                      });
-                    }, [
-                      Container(
-                        color: Colors.grey.shade500,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Column(
-                              children: [
-                                operatorCheck(
-                                  value: op050,
-                                  label: "050",
-                                  onChanged: (value) {
-                                    if (value!) {
-                                      referancePrefixList.add("050");
-                                    } else {
-                                      referancePrefixList.remove("050");
-                                    }
-                                    setState(() {
-                                      op050 == true
-                                          ? op050 = false
-                                          : op050 = true;
-                                    });
-                                  },
-                                ),
-                                operatorCheck(
-                                  label: "051",
-                                  value: op051,
-                                  onChanged: (value) {
-                                    if (value!) {
-                                      referancePrefixList.add("051");
-                                    } else {
-                                      referancePrefixList.remove("051");
-                                    }
-                                    setState(() {
-                                      op051 == true
-                                          ? op051 = false
-                                          : op051 = true;
-                                    });
-                                  },
-                                ),
-                                operatorCheck(
-                                  value: op010,
-                                  label: "010",
-                                  onChanged: (value) {
-                                    if (value!) {
-                                      referancePrefixList.add("010");
-                                    } else {
-                                      referancePrefixList.remove("010");
-                                    }
-                                    setState(() {
-                                      op010 == true
-                                          ? op010 = false
-                                          : op010 = true;
-                                    });
-                                  },
-                                ),
-                                operatorCheck(
-                                  value: op055,
-                                  label: "055",
-                                  onChanged: (value) {
-                                    if (value!) {
-                                      referancePrefixList.add("055");
-                                    } else {
-                                      referancePrefixList.remove("055");
-                                    }
-                                    setState(() {
-                                      op055 == true
-                                          ? op055 = false
-                                          : op055 = true;
-                                    });
-                                  },
-                                ),
-                              ],
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 45),
-                              child: Column(
+                    SizedBox(
+                      width: 305,
+                      child: operatorPrefix((index, isExpanded) {
+                        setState(() {
+                          if (index == 0) {
+                            isExpanded
+                                ? prefixStatus = false
+                                : prefixStatus = true;
+                          }
+                        });
+                      }, [
+                        Container(
+                          color: Colors.grey.shade500,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Column(
                                 children: [
                                   operatorCheck(
-                                    value: op099,
-                                    label: "099",
+                                    value: op050,
+                                    label: "050",
                                     onChanged: (value) {
+                                      // if (value!) {
+                                      //   referancePrefixList.add("050");
+                                      // } else {
+                                      //   referancePrefixList.remove("050");
+                                      // }
                                       setState(() {
-                                        op099 == true
-                                            ? op099 = false
-                                            : op099 = true;
+                                        op050 == true
+                                            ? op050 = false
+                                            : op050 = true;
                                       });
                                     },
                                   ),
                                   operatorCheck(
-                                    label: "070",
-                                    value: op070,
+                                    label: "051",
+                                    value: op051,
                                     onChanged: (value) {
-                                      if (value!) {
-                                        referancePrefixList.add("070");
-                                      } else {
-                                        referancePrefixList.remove("070");
-                                      }
+                                      // if (value!) {
+                                      //   referancePrefixList.add("051");
+                                      // } else {
+                                      //   referancePrefixList.remove("051");
+                                      // }
                                       setState(() {
-                                        op070 == true
-                                            ? op070 = false
-                                            : op070 = true;
+                                        op051 == true
+                                            ? op051 = false
+                                            : op051 = true;
                                       });
                                     },
                                   ),
                                   operatorCheck(
-                                    value: op077,
-                                    label: "077",
+                                    value: op010,
+                                    label: "010",
                                     onChanged: (value) {
-                                      if (value!) {
-                                        referancePrefixList.add("077");
-                                      } else {
-                                        referancePrefixList.remove("077");
-                                      }
+                                      // if (value!) {
+                                      //   referancePrefixList.add("010");
+                                      // } else {
+                                      //   referancePrefixList.remove("010");
+                                      // }
                                       setState(() {
-                                        op077 == true
-                                            ? op077 = false
-                                            : op077 = true;
+                                        op010 == true
+                                            ? op010 = false
+                                            : op010 = true;
+                                      });
+                                    },
+                                  ),
+                                  operatorCheck(
+                                    value: op055,
+                                    label: "055",
+                                    onChanged: (value) {
+                                      // if (value!) {
+                                      //   referancePrefixList.add("055");
+                                      // } else {
+                                      //   referancePrefixList.remove("055");
+                                      // }
+                                      setState(() {
+                                        op055 == true
+                                            ? op055 = false
+                                            : op055 = true;
                                       });
                                     },
                                   ),
                                 ],
                               ),
-                            )
-                          ],
-                        ),
-                      )
-                    ]),
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 45),
+                                child: Column(
+                                  children: [
+                                    operatorCheck(
+                                      value: op099,
+                                      label: "099",
+                                      onChanged: (value) {
+                                        setState(() {
+                                          op099 == true
+                                              ? op099 = false
+                                              : op099 = true;
+                                        });
+                                      },
+                                    ),
+                                    operatorCheck(
+                                      label: "070",
+                                      value: op070,
+                                      onChanged: (value) {
+                                        // if (value!) {
+                                        //   referancePrefixList.add("070");
+                                        // } else {
+                                        //   referancePrefixList.remove("070");
+                                        // }
+                                        setState(() {
+                                          op070 == true
+                                              ? op070 = false
+                                              : op070 = true;
+                                        });
+                                      },
+                                    ),
+                                    operatorCheck(
+                                      value: op077,
+                                      label: "077",
+                                      onChanged: (value) {
+                                        // if (value!) {
+                                        //   referancePrefixList.add("077");
+                                        // } else {
+                                        //   referancePrefixList.remove("077");
+                                        // }
+                                        setState(() {
+                                          op077 == true
+                                              ? op077 = false
+                                              : op077 = true;
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        )
+                      ]),
+                    ),
                     MyContainer(
                       shadowColor: Colors.blueGrey,
                       boxColor: Colors.blue.shade200,
@@ -610,8 +619,12 @@ Widget operatorPrefix(
                 title: Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Center(
-                    child: Text(
-                      'PREFIX',
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 30),
+                      child: Text(
+                        'PREFIX',
+                        style: TextStyle(color: Colors.black45, fontSize: 23),
+                      ),
                     ),
                   ),
                 ),
@@ -631,7 +644,8 @@ class operatorCheck extends StatelessWidget {
   final bool value;
   final void Function(bool? value)? onChanged;
   final String label;
-  const operatorCheck({required this.value, this.onChanged, required this.label});
+  const operatorCheck(
+      {required this.value, this.onChanged, required this.label});
 
   @override
   Widget build(BuildContext context) {
