@@ -20,6 +20,7 @@ class Network {
       required this.context});
 
   Future<void> connect() async {
+    bool allData = false;
     int counter = page;
     try {
       while (true) {
@@ -35,8 +36,11 @@ class Network {
             ScaffoldMessenger.of(context).hideCurrentSnackBar();
           },
         );
+        if (categoryKey == "all") {
+          allData = true;
+        }
         var response = await http.get(
-          getBakcell(number, categoryKey, counter),
+          getBakcell(number, categoryKey, counter, allData),
           headers: await header(0),
         );
         if (response.statusCode == 500) {

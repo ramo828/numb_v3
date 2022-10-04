@@ -47,6 +47,7 @@ class _homePageState extends State<homePage> {
   @override
   void initState() {
     requestPermision();
+    initNumberData();
     super.initState();
   }
 

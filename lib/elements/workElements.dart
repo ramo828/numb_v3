@@ -327,7 +327,9 @@ class _numberTextFieldState extends State<numberTextField> {
                           });
                           Network network = Network(
                               number: numberValue!,
-                              categoryKey: categoryValue!,
+                              categoryKey: categoryValue! == "Hamısı"
+                                  ? "all"
+                                  : categoryValue!,
                               page: 0,
                               prefixKey: prefixValue!,
                               context: context);
@@ -503,6 +505,7 @@ class _numberTextFieldState extends State<numberTextField> {
       menuItem("Sadə", "Sadə", true),
       menuItem("Xüsusi 1", "Xüsusi 1", true),
       menuItem("Xüsusi 2", "Xüsusi 2", true),
+      menuItem("Hamısı", "Hamısı", true),
     ];
     List<DropdownMenuItem<dynamic>>? bakcell099 = [
       menuItem("Sadə099", "Sadə099", true),
@@ -510,6 +513,7 @@ class _numberTextFieldState extends State<numberTextField> {
       menuItem("Gümüş", "Gümüş", true),
       menuItem("Qızıl", "Qızıl", true),
       menuItem("Platin", "Platin", true),
+      menuItem("Hamısı", "Hamısı", true),
     ];
     List<DropdownMenuItem<dynamic>>? nar = [
       menuItem("GENERAL", "GENERAL", true),

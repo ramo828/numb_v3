@@ -22,17 +22,24 @@ Future<Map<String, String>> header(int choise) async {
   };
 }
 
-Uri getBakcell(String number, String categoryKey, int page) {
+Uri getBakcell(String number, String categoryKey, int page, bool all) {
   return Uri.https(
     "public-api.azerconnect.az",
     "/msbkcposappreservation/api/freemsisdn-nomre/search",
-    {
-      "msisdn": number,
-      "categoryId": getCategory(categoryKey),
-      "showReserved": "true",
-      "size": "2000",
-      "page": "$page",
-    },
+    !all
+        ? {
+            "msisdn": number,
+            "showReserved": "true",
+            "size": "2000",
+            "categoryId": getCategory(categoryKey),
+            "page": "$page",
+          }
+        : {
+            "msisdn": number,
+            "showReserved": "true",
+            "size": "2000",
+            "page": "$page",
+          },
   );
 }
 
