@@ -370,12 +370,15 @@ class _AuthorState extends State<Author> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      child: Text(
-        "Created by Ramiz Mammadli",
-        style: TextStyle(
-          fontSize: 25,
-          fontFamily: "dizaynFont",
-          color: colors[count],
+      child: Padding(
+        padding: const EdgeInsets.all(27.0),
+        child: Text(
+          "Created by Ramiz Mammadli",
+          style: TextStyle(
+            fontSize: 25,
+            fontFamily: "dizaynFont",
+            color: colors[count],
+          ),
         ),
       ),
       onHorizontalDragEnd: (details) {

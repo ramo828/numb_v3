@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:routetest/backent/io/fileProvider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../backent/functions.dart';
+import '../../../backent/functions.dart';
 
 List<String> data = [];
 String numberData = "";
@@ -10,6 +10,7 @@ fileProvider fp = fileProvider();
 bool isDown = false;
 String vcfData = "";
 int counterAllData = 0;
+int counterAllDataRaw = 0;
 //VCF hazirlanacaq prefixler
 List<String> prefixList = [
   "055",
@@ -37,6 +38,7 @@ class numberList extends StatefulWidget {
     numberData = "";
     vcfData = "";
     counterAllData = 0;
+    counterAllDataRaw = 0;
   }
 
   void setNumberList(List<String> num) {
@@ -54,6 +56,10 @@ class numberList extends StatefulWidget {
 
   String getMaxLengthVCF() {
     return counterAllData.toString();
+  }
+
+  String getMaxLengthVCFraw() {
+    return counterAllDataRaw.toString();
   }
 
   Future<bool> writeVCF() async {
@@ -80,6 +86,26 @@ class numberList extends StatefulWidget {
     return isDown;
   }
 
+  Future<bool> writeVCFraw(List<String> data) async {
+    print(data);
+    isDown = false;
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    var contactName = sp.getStringList("setting")![2];
+
+    if (data != null || contactName != null) {
+      for (int count = 0; count < data.length; count++) {
+        vcfData += func().vcfRaw(contactName, data[count], counterAllDataRaw);
+        counterAllDataRaw++;
+      }
+      await fp.fileWrite(vcfData, "numbersActive.vcf");
+    } else {
+      isDown = false;
+    }
+    isDown = true;
+    data.clear();
+    return isDown;
+  }
+
   Future<bool> writeTXT() async {
     isDown = false;
     // ignore: unnecessary_null_comparison
@@ -91,6 +117,27 @@ class numberList extends StatefulWidget {
       print("yuklendi");
 
       await fp.fileWrite(numberData, "numbers.txt");
+    } else {
+      debugPrint("Bos data");
+      return isDown;
+    }
+    isDown = true;
+    debugPrint("Yuklendi");
+    return isDown;
+  }
+
+  Future<bool> writeTXTraw(List<String> data) async {
+    String numberDataRaw = "";
+    isDown = false;
+    // ignore: unnecessary_null_comparison
+
+    if (data != null) {
+      for (var element in data) {
+        numberDataRaw += "$element\n";
+      }
+      print("yuklendi");
+
+      await fp.fileWrite(numberDataRaw, "active_numbers.txt");
     } else {
       debugPrint("Bos data");
       return isDown;

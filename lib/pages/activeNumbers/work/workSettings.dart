@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:routetest/backent/firebaseControl.dart';
 import 'package:routetest/elements/loginElements.dart';
 import 'package:routetest/myWidgest/myWidgets.dart';
-import 'package:routetest/pages/workPage.dart';
+import 'package:routetest/pages/activeNumbers/work/workPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../elements/workElements.dart';
+import '../../../elements/workElements.dart';
 
 List<String>? settings = [];
 List<String>? newSettings = [];
@@ -81,7 +81,6 @@ class _workSettingsState extends State<workSettings> {
 
     var fieldColor = Colors.grey.withOpacity(0.1);
     var cardColor = Colors.black12;
-
 
     return Scaffold(
       appBar: AppBar(

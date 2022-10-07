@@ -40,7 +40,7 @@ class Network {
           allData = true;
         }
         var response = await http.get(
-          getBakcell(number, categoryKey, counter, allData),
+          getBakcell(number, categoryKey, counter, prefixKey, allData),
           headers: await header(0),
         );
         if (response.statusCode == 500) {

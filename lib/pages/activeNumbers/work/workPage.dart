@@ -1,10 +1,10 @@
 // ignore: file_names
 import 'package:flutter/material.dart';
-import 'package:routetest/pages/workNumberList.dart';
-import 'package:routetest/pages/workSettings.dart';
+import 'package:routetest/pages/activeNumbers/work/workNumberList.dart';
+import 'package:routetest/pages/activeNumbers/work/workSettings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import '../elements/workElements.dart';
+import '../../../elements/workElements.dart';
 
 bool isLoading = false;
 bool testType = false;
@@ -69,22 +69,7 @@ class _WorkerState extends State<Worker> {
                     )
                   : Container()
               : Container(),
-          index == 1
-              ? PopupMenuButton(
-                  onSelected: ((value) {
-                    exportData(value);
-                  }),
-                  icon: const Icon(Icons.list),
-                  itemBuilder: (context) {
-                    return List.generate(popMenu.length, (index) {
-                      return PopupMenuItem(
-                        value: index,
-                        child: Text(popMenu[index]),
-                      );
-                    });
-                  },
-                )
-              : Container(),
+          index == 1 ? myPopMenu() : Container(),
         ],
       ),
       body: Column(
@@ -118,6 +103,23 @@ class _WorkerState extends State<Worker> {
           const SizedBox(height: 5),
         ],
       ),
+    );
+  }
+
+  PopupMenuButton<int> myPopMenu() {
+    return PopupMenuButton(
+      onSelected: ((value) {
+        exportData(value);
+      }),
+      icon: const Icon(Icons.list),
+      itemBuilder: (context) {
+        return List.generate(popMenu.length, (index) {
+          return PopupMenuItem(
+            value: index,
+            child: Text(popMenu[index]),
+          );
+        });
+      },
     );
   }
 

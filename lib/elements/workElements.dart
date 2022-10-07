@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:routetest/backent/network.dart';
 import 'package:routetest/myWidgest/myWidgets.dart';
-import 'package:routetest/pages/workNumberList.dart';
+import 'package:routetest/pages/activeNumbers/work/workNumberList.dart';
 
 // ignore: camel_case_types
 class numberTextField extends StatefulWidget {
@@ -188,11 +188,6 @@ class _numberTextFieldState extends State<numberTextField> {
                                     value: op010,
                                     label: "010",
                                     onChanged: (value) {
-                                      // if (value!) {
-                                      //   referancePrefixList.add("010");
-                                      // } else {
-                                      //   referancePrefixList.remove("010");
-                                      // }
                                       setState(() {
                                         op010 == true
                                             ? op010 = false
@@ -204,11 +199,6 @@ class _numberTextFieldState extends State<numberTextField> {
                                     value: op055,
                                     label: "055",
                                     onChanged: (value) {
-                                      // if (value!) {
-                                      //   referancePrefixList.add("055");
-                                      // } else {
-                                      //   referancePrefixList.remove("055");
-                                      // }
                                       setState(() {
                                         op055 == true
                                             ? op055 = false
@@ -237,11 +227,6 @@ class _numberTextFieldState extends State<numberTextField> {
                                       label: "070",
                                       value: op070,
                                       onChanged: (value) {
-                                        // if (value!) {
-                                        //   referancePrefixList.add("070");
-                                        // } else {
-                                        //   referancePrefixList.remove("070");
-                                        // }
                                         setState(() {
                                           op070 == true
                                               ? op070 = false
@@ -253,11 +238,6 @@ class _numberTextFieldState extends State<numberTextField> {
                                       value: op077,
                                       label: "077",
                                       onChanged: (value) {
-                                        // if (value!) {
-                                        //   referancePrefixList.add("077");
-                                        // } else {
-                                        //   referancePrefixList.remove("077");
-                                        // }
                                         setState(() {
                                           op077 == true
                                               ? op077 = false

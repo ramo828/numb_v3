@@ -22,12 +22,14 @@ Future<Map<String, String>> header(int choise) async {
   };
 }
 
-Uri getBakcell(String number, String categoryKey, int page, bool all) {
+Uri getBakcell(
+    String number, String categoryKey, int page, String prefix, bool all) {
   return Uri.https(
     "public-api.azerconnect.az",
     "/msbkcposappreservation/api/freemsisdn-nomre/search",
     !all
         ? {
+            "prefix": prefix,
             "msisdn": number,
             "showReserved": "true",
             "size": "2000",

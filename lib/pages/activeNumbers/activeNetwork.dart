@@ -33,4 +33,32 @@ class activeNetwork {
       return false;
     }
   }
+
+  Future<bool> activeNUmbersBakcell(String number, String prefix) async {
+    try {
+      var response = await http.get(
+        getBakcell(number, "", 0, prefix, true),
+        headers: await header(0),
+      );
+      if (response.statusCode == 500) {
+        throw Exception("Key xətası");
+      }
+      if (response.statusCode == 200) {
+        var data = loadData(response.body);
+        List msis = data[0]['freeMsisdnList'];
+        if (msis.isNotEmpty) {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+      // ignore: empty_catches
+
+    } catch (e) {
+      Exception(e);
+      return false;
+    }
+  }
 }

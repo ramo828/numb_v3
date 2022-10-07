@@ -36,6 +36,22 @@ class func {
 
   String vcf(String contactName, List<String> prefix, int prefixIndex,
       String number, int counter) {
-    return "${dataVcard[0]}${dataVcard[1]}$contactName$counter\n${dataVcard[2]}$contactName$counter\n${dataVcard[3]}${prefix[prefixIndex]}${number.substring(2, 9)}\n${dataVcard[4]}${dataVcard[5]}";
+    try {
+      return "${dataVcard[0]}${dataVcard[1]}$contactName$counter\n${dataVcard[2]}$contactName$counter\n${dataVcard[3]}${prefix[prefixIndex]}${number.substring(2, 9)}\n${dataVcard[4]}${dataVcard[5]}";
+    } catch (e, s) {
+      print(e);
+      print(s);
+      return "";
+    }
+  }
+
+  String vcfRaw(String contactName, String number, int counter) {
+    try {
+      return "${dataVcard[0]}${dataVcard[1]}$contactName$counter\n${dataVcard[2]}$contactName$counter\n${dataVcard[3]}$number\n${dataVcard[4]}${dataVcard[5]}";
+    } catch (e, s) {
+      print(e);
+      print(s);
+      return "";
+    }
   }
 }
