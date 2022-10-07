@@ -506,7 +506,7 @@ class _numberTextFieldState extends State<numberTextField> {
       menuItem("Prestige6", "PRESTİGE6", true),
       menuItem("Prestige7", "PRESTİGE7", true),
       menuItem("Prestige7", "PRESTİGE8", true),
-      menuItem("Hamısı", "", true),
+      menuItem("Hamısı", "Hamısı", true),
     ];
 
     return DropdownButton(

@@ -93,7 +93,8 @@ class Network {
           },
         );
         var response = await http.get(
-          getNar(number, categoryKey, prefixKey.substring(1, 3), counter),
+          getNar(number, categoryKey == "all" ? "" : categoryKey,
+              prefixKey.substring(1, 3), counter),
           headers: await header(1),
         );
 

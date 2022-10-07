@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:routetest/elements/homePageElements.dart';
 import 'package:routetest/elements/workElements.dart';
@@ -280,11 +279,10 @@ class _activePageState extends State<activePage> {
           } else if (prefixList[i] == "99499") {
             pref.add("099");
           }
-          statusActive = await net.activeNUmbersBakcell(
-                      number.substring(2, number.length), prefixInput) ==
-                  true
-              ? false
-              : true;
+          statusActive = await net
+              .activeNUmbersBakcell(
+                  number.substring(2, number.length), prefixInput)
+              .then((value) => !value);
         } else if (prefixList[i] == "99470" || prefixList[i] == "99477") {
           setState(() {
             operator = prefixList[i];
@@ -296,13 +294,13 @@ class _activePageState extends State<activePage> {
           } else if (prefixList[i] == "99477") {
             pref.add("077");
           }
-          statusActive = await net.activeNumbers(
-              "${prefixList[i]}${number.substring(2, number.length)}");
+          statusActive = await net
+              .activeNumbers(
+                  "${prefixList[i]}${number.substring(2, number.length)}")
+              .then((value) => value);
         }
         if (statusActive) {
           setState(() {
-            debugPrint("Aktiv: ${number.substring(2, number.length)}");
-
             myListReal.add("${pref[0]}${number.substring(2, number.length)}");
             activeNumberCount++;
           });
@@ -321,8 +319,6 @@ class _activePageState extends State<activePage> {
           },
         ),
       );
-
-      Exception(e);
     }
   }
 
