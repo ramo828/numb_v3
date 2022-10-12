@@ -1,3 +1,4 @@
+import 'package:beautiful_soup_dart/beautiful_soup.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:routetest/elements/workElements.dart';
@@ -126,6 +127,70 @@ class Network {
       );
       ScaffoldMessenger.of(context).showSnackBar(error);
       print(e.toString());
+    }
+  }
+
+  Future<void> connectAzercell() async {
+    int counter = page == 0 ? 1 : 0;
+    String numbData = "";
+    int len = 0;
+    try {
+      while (true) {
+        print(counter);
+        SnackBar pageInfo = ilanBar(
+          "Səhifə sayı ${counter - 1}",
+          "Oldu",
+          50,
+          () {
+            //snackbari gizlet
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          },
+        );
+        ScaffoldMessenger.of(context).showSnackBar(pageInfo);
+
+        var response = await http.post(
+          getAzercell(counter.toString()),
+          headers: azercellHeader,
+          body: {
+            "prefix": prefixKey,
+            "num1": number[0],
+            "num2": number[1],
+            "num3": number[2],
+            "num4": number[3],
+            "num5": number[4],
+            "num6": number[5],
+            "num7": number[6],
+            "send_search": "1",
+          },
+        );
+        BeautifulSoup bs = BeautifulSoup(
+          response.body,
+        );
+        len = numbData.length;
+        var find = bs.findAll("div", attrs: {"class": "phonenumber"});
+        for (var numberData in find) {
+          numbData += "\n${numberData.innerHtml.trim().substring(12, 21)}";
+        }
+        if (len == numbData.length) {
+          break;
+        }
+        counter++;
+      }
+      for (String data in numbData.split("\n")) {
+        if (data.isNotEmpty) {
+          numberList.add(data);
+        }
+      }
+    } catch (e) {
+      SnackBar error = ilanBar(
+        "Xəta: $e",
+        "Oldu",
+        4000000,
+        () {
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        },
+      );
+      ScaffoldMessenger.of(context).showSnackBar(error);
     }
   }
 }

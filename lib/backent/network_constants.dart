@@ -22,6 +22,25 @@ Future<Map<String, String>> header(int choise) async {
   };
 }
 
+Map<String, String> azercellHeader = {
+  "cache-control": "no-store, no-cache, must-revalidate",
+  "content-encoding": "gzip",
+  "date": "Sat, 08 Oct 2022 21:30:48 GMT",
+  "expires": "Thu, 19 Nov 1981 08:52:00 GMT",
+  "pragma": "no-cache",
+  "server": "nginx",
+  "x-country": "Azerbaijan",
+  "x-frame-options": "SAMEORIGIN",
+  // "content-length": "73",
+};
+
+Uri getAzercell(String page) {
+  return Uri.parse(
+    // ignore: unrelated_type_equality_checks
+    "https://azercellim.com/az/search${page != 0 ? "/$page" : ""}",
+  );
+}
+
 Uri getBakcell(
     String number, String categoryKey, int page, String prefix, bool all) {
   return Uri.https(

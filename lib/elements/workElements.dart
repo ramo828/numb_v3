@@ -265,6 +265,7 @@ class _numberTextFieldState extends State<numberTextField> {
                         ),
                       ),
                       onPress: () async {
+                        //VCF prefix
                         if (op050) {
                           referancePrefixList.add("050");
                         } else {
@@ -335,6 +336,17 @@ class _numberTextFieldState extends State<numberTextField> {
                                 .setNumberList(network.numberList);
                             const numberList().addNumber();
 
+                            // datalari liste elave et
+                          } else if (operatorValue == 'Azərcell') {
+                            debugPrint("Azərcell selected");
+                            const numberList().setPrefix(referancePrefixList);
+                            await network.connectAzercell();
+                            //listedeki kohne datalari sil
+                            const numberList().clearData();
+                            //yeni datalari elave et
+                            const numberList()
+                                .setNumberList(network.numberList);
+                            const numberList().addNumber();
                             // datalari liste elave et
                           }
 
@@ -415,6 +427,7 @@ class _numberTextFieldState extends State<numberTextField> {
         ),
       ),
       items: [
+        menuItem("Azərcell", "Azərcell", true),
         menuItem("Bakcell", "Bakcell", true),
         menuItem("Nar", "Nar", true),
       ],
@@ -427,10 +440,13 @@ class _numberTextFieldState extends State<numberTextField> {
               ? categoryValue = "Sadə"
               : value == "Bakcell"
                   ? categoryValue = "Sadə099"
-                  : categoryValue = "GENERAL";
+                  : value == "Nar"
+                      ? categoryValue = "GENERAL"
+                      : categoryValue = "Default";
 
           value == "Nar" ? prefixValue = "070" : prefixValue == "055";
           value == "Bakcell" ? prefixValue = "055" : prefixValue == "070";
+          value == "Azərcell" ? prefixValue = "050" : prefixValue == "051";
         });
       },
     );
@@ -444,6 +460,11 @@ class _numberTextFieldState extends State<numberTextField> {
     List<DropdownMenuItem<dynamic>>? nar = [
       menuItem("070", "070", true),
       menuItem("077", "077", true),
+    ];
+    List<DropdownMenuItem<dynamic>>? azercell = [
+      menuItem("050", "050", true),
+      menuItem("051", "051", true),
+      menuItem("010", "010", true),
     ];
 
     return DropdownButton(
@@ -466,7 +487,11 @@ class _numberTextFieldState extends State<numberTextField> {
           textAlign: TextAlign.center,
         ),
       ),
-      items: operatorValue == "Bakcell" ? bakcell : nar,
+      items: operatorValue == "Bakcell"
+          ? bakcell
+          : operatorValue == "Nar"
+              ? nar
+              : azercell,
       onChanged: (value) {
         setState(() {
           prefixValue = value;
@@ -474,13 +499,18 @@ class _numberTextFieldState extends State<numberTextField> {
               ? categoryValue = "Sadə"
               : value == "099"
                   ? categoryValue = "Sadə099"
-                  : categoryValue = "GENERAL";
+                  : value == "070"
+                      ? categoryValue = "GENERAL"
+                      : "Default";
         });
       },
     );
   }
 
   DropdownButton category<String>() {
+    List<DropdownMenuItem<dynamic>>? azercell = [
+      menuItem("Default", "Default", false),
+    ];
     List<DropdownMenuItem<dynamic>>? bakcell055 = [
       menuItem("Sadə", "Sadə", true),
       menuItem("Xüsusi 1", "Xüsusi 1", true),
@@ -534,9 +564,11 @@ class _numberTextFieldState extends State<numberTextField> {
       ),
       items: operatorValue == "Bakcell" && prefixValue == "055"
           ? bakcell055
-          : operatorValue == "Bakcell"
+          : operatorValue == "Bakcell" && prefixValue == "099"
               ? bakcell099
-              : nar,
+              : operatorValue == "Nar"
+                  ? nar
+                  : azercell,
       onChanged: (value) {
         setState(() {
           categoryValue = value;

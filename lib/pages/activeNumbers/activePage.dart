@@ -242,15 +242,21 @@ class _activePageState extends State<activePage> {
     if (number.length >= 9) {
       var prefixInput = number.substring(0, 2);
       if (prefixInput == "55") {
-        globalPrefix = ["99499", "99470", "99477"];
+        globalPrefix = ["99499", "99470", "99477", "99410", "99450", "99451"];
         prefixInput = "99";
       } else if (prefixInput == "99") {
-        globalPrefix = ["99455", "99470", "99477"];
+        globalPrefix = ["99455", "99470", "99477", "99410", "99450", "99451"];
         prefixInput = "55";
       } else if (prefixInput == "70") {
-        globalPrefix = ["99477", "99455", "99499"];
+        globalPrefix = ["99477", "99455", "99499", "99410", "99450", "99451"];
       } else if (prefixInput == "77") {
-        globalPrefix = ["99470", "99455", "99499"];
+        globalPrefix = ["99470", "99455", "99499", "99410", "99450", "99451"];
+      } else if (prefixInput == "50") {
+        globalPrefix = ["99477", "99455", "99499", "99410", "99470", "99451"];
+      } else if (prefixInput == "51") {
+        globalPrefix = ["99470", "99455", "99499", "99410", "99450", "99477"];
+      } else if (prefixInput == "10") {
+        globalPrefix = ["99470", "99455", "99499", "99451", "99450", "99477"];
       }
       await global(number, globalPrefix, prefixInput);
     }
@@ -298,8 +304,32 @@ class _activePageState extends State<activePage> {
               .activeNumbers(
                   "${prefixList[i]}${number.substring(2, number.length)}")
               .then((value) => value);
+          print("Azercell");
+        } else if (prefixList[i] == "99410" ||
+            prefixList[i] == "99450" ||
+            prefixList[i] == "99451") {
+          setState(() {
+            operator = prefixList[i];
+          });
+          pref.clear();
+          if (prefixList[i] == "99410") {
+            pref.add("010");
+          } else if (prefixList[i] == "99450") {
+            pref.add("050");
+          } else if (prefixList[i] == "99451") {
+            pref.add("051");
+          }
+          statusActive = await net
+              .activeAzercell(
+                number.substring(2, number.length),
+                prefixList[i],
+              )
+              .then((value) => value);
         }
+
         if (statusActive) {
+          print(prefixList[i]);
+          print(statusActive);
           setState(() {
             myListReal.add("${pref[0]}${number.substring(2, number.length)}");
             activeNumberCount++;
