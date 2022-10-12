@@ -121,13 +121,17 @@ class firebaseControls {
     if (getReferal == null && login == null) {
       throw Exception("Referal doğru deyil");
     }
-    firebase
-        .collection("users")
-        .doc(getReferal)
-        .collection("groupUsers")
-        .doc(login)
-        .get()
-        .then(fn);
+    try {
+      firebase
+          .collection("users")
+          .doc(getReferal)
+          .collection("groupUsers")
+          .doc(login)
+          .get()
+          .then(fn);
+    } catch (e) {
+      Exception(e);
+    }
   }
 
 //group bilgilerini almaq ucun

@@ -17,7 +17,6 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'elements/loginElements.dart';
 
 ThemeData? theme;
-bool themeStatus = true;
 bool routeStatus = false;
 
 firebaseControls firebaseControl = firebaseControls();

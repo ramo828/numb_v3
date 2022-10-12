@@ -132,21 +132,32 @@ class _activePageState extends State<activePage> {
                 height: 450,
                 width: 300,
                 color: Colors.grey.shade300,
-                child: ListView.builder(
-                  itemCount: myListReal.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      tileColor: Colors.grey.shade300.withOpacity(0.1),
-                      title: Center(
-                        child: Text(
-                          "${index + 1} - ${myListReal[index]}",
-                          style: const TextStyle(
-                            color: Colors.black,
+                child: RefreshIndicator(
+                  backgroundColor: Colors.grey.shade300,
+                  onRefresh: (() async {
+                    setState(() {});
+                    stop = false;
+                    myListReal.clear();
+                    activeNumberCount = 0;
+                    lastNumberCount = myListReal.length;
+                    initNumberData();
+                  }),
+                  child: ListView.builder(
+                    itemCount: myListReal.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        tileColor: Colors.grey.shade300.withOpacity(0.1),
+                        title: Center(
+                          child: Text(
+                            "${index + 1} - ${myListReal[index]}",
+                            style: const TextStyle(
+                              color: Colors.black,
+                            ),
                           ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
               ),
             ),
@@ -328,8 +339,6 @@ class _activePageState extends State<activePage> {
         }
 
         if (statusActive) {
-          print(prefixList[i]);
-          print(statusActive);
           setState(() {
             myListReal.add("${pref[0]}${number.substring(2, number.length)}");
             activeNumberCount++;

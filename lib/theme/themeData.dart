@@ -67,8 +67,8 @@ ThemeData dark = ThemeData.dark();
 
 // ignore: unused_element
 class themeWrite with ChangeNotifier {
-  bool _dark = true;
-  bool _darkDef = true;
+  bool _dark = false;
+  bool _darkDef = false;
 
   void themeInit() async {
     _darkDef = await getMode;

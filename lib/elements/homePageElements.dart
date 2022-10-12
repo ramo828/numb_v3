@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -289,7 +291,8 @@ Future<void> _launchInBrowser(String url) async {
 
 Future<void> logOut() async {
   SharedPreferences sp = await SharedPreferences.getInstance();
-  sp.setBool('logIN', false);
+  await sp.remove("logIN");
+  exit(1);
 }
 
 class updateController extends StatelessWidget {

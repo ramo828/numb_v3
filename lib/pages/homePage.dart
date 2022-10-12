@@ -1,5 +1,7 @@
 // ignore: file_names
 
+// ignore_for_file: unnecessary_null_comparison
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -13,6 +15,8 @@ import 'package:routetest/pages/activeNumbers/activePage.dart';
 import 'package:routetest/pages/activeNumbers/work/workPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../elements/workElements.dart';
+
 String _groupName = '';
 int _groupLevel = 0;
 bool _groupStatus = false;
@@ -20,6 +24,9 @@ bool _groupStatus = false;
 int _groupID = 0;
 String _narKey = "";
 String _bakcellKey = "";
+var userName = "";
+var userPass = "";
+
 FirebaseFirestore _firebase = FirebaseFirestore.instance;
 firebaseControls fc = firebaseControls();
 fileProvider fp = fileProvider();
@@ -91,6 +98,34 @@ class _homeScreenBeginState extends State<homeScreenBegin> {
     });
   }
 
+  void userControl() async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    List<String> userControlData = sp.getStringList("controlUser") ?? [];
+
+    Future.delayed(const Duration(seconds: 5), () async {
+      try {
+        if (await fc.loginControl(userControlData[0], userControlData[1])) {
+        } else {
+          logOut();
+        }
+      } catch (e) {
+        var xeta = ilanBar(
+          e.toString(),
+          "oldu",
+          3000000,
+          () {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          },
+        );
+
+        ScaffoldMessenger.of(context).showSnackBar(xeta);
+        Future.delayed(const Duration(seconds: 3), () {
+          logOut();
+        });
+      }
+    });
+  }
+
   void groupKeyData() async {
     SharedPreferences sp = await SharedPreferences.getInstance();
     List<String>? settingData = sp.getStringList("setting");
@@ -113,6 +148,7 @@ class _homeScreenBeginState extends State<homeScreenBegin> {
   Widget build(BuildContext context) {
     groupData();
     groupKeyData();
+    userControl();
     return ListView(
       children: [
         const updateController(),

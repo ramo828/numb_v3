@@ -188,6 +188,8 @@ class loginButton extends StatelessWidget {
             SharedPreferences sp = await SharedPreferences.getInstance();
             await sp.setBool("logIN", true);
             await sp.setString("id", login);
+            await sp.setStringList("controlUser", [login, pass]);
+
             Navigator.pushNamed(context, homePage.routeName);
           } else {}
         } catch (e) {
