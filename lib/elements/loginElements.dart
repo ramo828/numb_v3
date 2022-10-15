@@ -186,7 +186,6 @@ class loginButton extends StatelessWidget {
         try {
           if (await firebaseControl.loginControl(login, pass)) {
             SharedPreferences sp = await SharedPreferences.getInstance();
-            await sp.setBool("logIN", true);
             await sp.setString("id", login);
             await sp.setStringList("controlUser", [login, pass]);
 

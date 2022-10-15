@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:routetest/backent/firebaseControl.dart';
+import 'package:routetest/elements/workElements.dart';
 import 'package:routetest/pages/activeNumbers/activePage.dart';
 import 'package:routetest/pages/panel/usersPanel.dart';
 import 'package:routetest/pages/registerPage.dart';
@@ -66,16 +67,23 @@ class _YaziOrneyiState extends State<YaziOrneyi> {
   final Future<FirebaseApp> _firebase = Firebase.initializeApp();
 
   void init() async {
-    await getNewUser() ? oldUser() : debugPrint("Old user");
-    SharedPreferences sp = await SharedPreferences.getInstance();
-    bool getStatus = sp.getBool("logIN") ?? false;
-    //
-    if (getStatus) {
-      setState(() {
-        routeStatus = true;
-      });
-    } else {
-      routeStatus = false;
+    try {
+      await getNewUser() ? oldUser() : debugPrint("Old user");
+      SharedPreferences sp = await SharedPreferences.getInstance();
+      List<String> userControlData =
+          sp.getStringList("controlUser") ?? ["", ""];
+      bool getStatus = await firebaseControl.loginControl(
+          userControlData[0], userControlData[1]);
+      //
+      if (getStatus) {
+        setState(() {
+          routeStatus = true;
+        });
+      } else {
+        routeStatus = false;
+      }
+    } catch (e) {
+      print(e);
     }
   }
 
@@ -92,70 +100,71 @@ class _YaziOrneyiState extends State<YaziOrneyi> {
     PageController controller = PageController();
 
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: Provider.of<themeWrite>(context).theme,
-        initialRoute: '/',
-        onGenerateRoute: (settings) {
-          switch (settings.name) {
-            case homePage.routeName:
-              return MaterialPageRoute(
-                builder: (context) => const homePage(),
-              );
-            case Haqqinda.routeName:
-              return MaterialPageRoute(
-                builder: (context) => const Haqqinda(),
-              );
-            case Worker.routeName:
-              return MaterialPageRoute(
-                builder: (context) => const Worker(),
-              );
-            case numberList.routeName:
-              return MaterialPageRoute(
-                builder: (context) => const numberList(),
-              );
-            case register.routeName:
-              return MaterialPageRoute(
-                builder: (context) => const register(),
-              );
-            case Ayarlar.routeName:
-              return MaterialPageRoute(
-                builder: (context) => const Ayarlar(),
-              );
-            case usersPanel.routeName:
-              return MaterialPageRoute(
-                builder: (context) => const usersPanel(),
-              );
-            case workSettings.routeName:
-              return MaterialPageRoute(
-                builder: (context) => const workSettings(),
-              );
-            case activePage.routeName:
-              return MaterialPageRoute(
-                builder: (context) => const activePage(),
-              );
+      debugShowCheckedModeBanner: false,
+      theme: Provider.of<themeWrite>(context).theme,
+      initialRoute: '/',
+      onGenerateRoute: (settings) {
+        switch (settings.name) {
+          case homePage.routeName:
+            return MaterialPageRoute(
+              builder: (context) => const homePage(),
+            );
+          case Haqqinda.routeName:
+            return MaterialPageRoute(
+              builder: (context) => const Haqqinda(),
+            );
+          case Worker.routeName:
+            return MaterialPageRoute(
+              builder: (context) => const Worker(),
+            );
+          case numberList.routeName:
+            return MaterialPageRoute(
+              builder: (context) => const numberList(),
+            );
+          case register.routeName:
+            return MaterialPageRoute(
+              builder: (context) => const register(),
+            );
+          case Ayarlar.routeName:
+            return MaterialPageRoute(
+              builder: (context) => const Ayarlar(),
+            );
+          case usersPanel.routeName:
+            return MaterialPageRoute(
+              builder: (context) => const usersPanel(),
+            );
+          case workSettings.routeName:
+            return MaterialPageRoute(
+              builder: (context) => const workSettings(),
+            );
+          case activePage.routeName:
+            return MaterialPageRoute(
+              builder: (context) => const activePage(),
+            );
+        }
+        return null;
+      },
+      home: FutureBuilder(
+        builder: (context, AsyncSnapshot ash) {
+          if (ash.hasError) {
+            return const Center(
+              child: Text(
+                "Problem yarandi",
+              ),
+            );
+          } else if (ash.hasData) {
+            return Scaffold(
+              body: routeStatus ? const homePage() : const loginTwo(),
+            );
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           }
-          return null;
         },
-        home: FutureBuilder(
-          builder: (context, AsyncSnapshot ash) {
-            if (ash.hasError) {
-              return const Center(
-                child: Text(
-                  "Problem yarandi",
-                ),
-              );
-            } else if (ash.hasData) {
-              return Scaffold(
-                body: routeStatus ? const homePage() : const loginTwo(),
-              );
-            } else {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-          },
-          future: _firebase,
-        ));
+        future: _firebase,
+      ),
+    );
   }
 }
 
@@ -169,6 +178,10 @@ class loginTwo extends StatefulWidget {
 
 // ignore: camel_case_types
 class _loginTwoState extends State<loginTwo> {
+  final List<Widget> _widget = [
+    const loginPage(),
+    const register(),
+  ];
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -180,15 +193,12 @@ class _loginTwoState extends State<loginTwo> {
             onPageChanged: (value) {
               setState(() {});
             },
-            children: const [
-              loginPage(),
-              register(),
-            ],
+            children: _widget,
           ),
         ),
         SmoothPageIndicator(
           controller: controller,
-          count: 2,
+          count: _widget.length,
           axisDirection: Axis.horizontal,
           effect: const SlideEffect(
             spacing: 10,

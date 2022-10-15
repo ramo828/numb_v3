@@ -291,7 +291,7 @@ Future<void> _launchInBrowser(String url) async {
 
 Future<void> logOut() async {
   SharedPreferences sp = await SharedPreferences.getInstance();
-  await sp.remove("logIN");
+  await sp.remove("controlUser");
   exit(1);
 }
 
